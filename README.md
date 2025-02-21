@@ -1,5 +1,5 @@
 # DS-Data_Logger
-A simple interace for logging data in situ on a mobile device via a static web page.
+A web-based intyerface and applications designed for logging data in the field on a mobile device during data walks. 
 
 ## About
 
