@@ -127,7 +127,7 @@ textarea {
     body {
     background-color: #050508;
     /*text-align: center;*/
-    color: #27baa4;
+    color: #fff;
     font-family: 'apercu-regular', sans-serif;/*'Oxygen Mono', Monaco, sans-serif;*/
     line-height: 1.3em;
     touch-action: manipulation;
@@ -142,7 +142,7 @@ textarea {
 
   button {
     font-family: 'mono-regular', monospace;
-    background-color: #27baa4;
+    background-color: #2b6799;
     color: #fff;
     border-radius: 50%;
     display: block;
@@ -200,7 +200,7 @@ textarea {
 
   .master-button {
     font-family: 'mono-regular', monospace;
-    background-color: #F8A17A;
+    background-color: #e40b79;
     color: #000;
   }
 
