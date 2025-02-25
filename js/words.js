@@ -1,5 +1,5 @@
 // Initialize Leaflet map
-var map = L.map('map').setView([51.51, -0.12], 9);
+var map = L.map('map').setView([53.350140, -6.266155], 9);
 
 // Add a tile layer (using OpenStreetMap as an example)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
