@@ -227,11 +227,6 @@ var rangeMax1 = document.getElementById("rangeMax1");
 rangeMin1.value = rangeInput1.min;
 rangeMax1.value = rangeInput1.max;
 
-
-/*var inputField1 = document.getElementById("inputField1");
-var inputField2 = document.getElementById("inputField2");
-var inputField3 = document.getElementById("inputField3");*/
-
 // variables for editing
 var currEdit = false;
 var editBtn = document.getElementById("edit");
@@ -409,26 +404,8 @@ function editPress() {
 		rangeMin1.style.visibility = "visible";
 		rangeMax1.style.visibility = "visible";
 
-		/*buttonLabel2.style.visibility = "visible";
-		buttonLabel3.style.visibility = "visible";
-		buttonLabel4.style.visibility = "visible";
-		buttonLabel5.style.visibility = "visible";
-		buttonLabel6.style.visibility = "visible";
-		buttonLabel7.style.visibility = "visible";
-		buttonLabel8.style.visibility = "visible";
-		buttonLabel9.style.visibility = "visible";*/
-
 		addButton1.classList.toggle("inactive-button");
 
-		/*countBtn1.classList.toggle("inactive-button");
-		countBtn2.classList.toggle("inactive-button");
-		countBtn3.classList.toggle("inactive-button");
-		countBtn4.classList.toggle("inactive-button");
-		countBtn5.classList.toggle("inactive-button");
-		countBtn6.classList.toggle("inactive-button");
-		countBtn7.classList.toggle("inactive-button");
-		countBtn8.classList.toggle("inactive-button");
-		countBtn9.classList.toggle("inactive-button");*/
 	} else {
 		editBtn.innerHTML = "Edit";
 
@@ -441,54 +418,13 @@ function editPress() {
 		rangeInput1.min = rangeMin1.value;
 		rangeInput1.max = rangeMax1.value;
 
-		/*buttonLabel2.style.visibility = "hidden";
-		addButton2.innerHTML = buttonLabel2.value;
-		buttonLabel3.style.visibility = "hidden";
-		addButton3.innerHTML = buttonLabel3.value;*/
-
 		addButton1.classList.toggle("inactive-button");
-		/*
-		buttonLabel1.style.visibility = "hidden";
-		countBtn1.innerHTML = buttonLabel1.value;
-		buttonLabel2.style.visibility = "hidden";
-		countBtn2.innerHTML = buttonLabel2.value;
-		buttonLabel3.style.visibility = "hidden";
-		countBtn3.innerHTML = buttonLabel3.value;
-		
-		buttonLabel4.style.visibility = "hidden";
-		countBtn4.innerHTML = buttonLabel4.value;
-		buttonLabel5.style.visibility = "hidden";
-		countBtn5.innerHTML = buttonLabel5.value;
-		buttonLabel6.style.visibility = "hidden";
-		countBtn6.innerHTML = buttonLabel6.value;
-		
-		buttonLabel7.style.visibility = "hidden";
-		countBtn7.innerHTML = buttonLabel7.value;
-		buttonLabel8.style.visibility = "hidden";
-		countBtn8.innerHTML = buttonLabel8.value;
-		buttonLabel9.style.visibility = "hidden";
-		countBtn9.innerHTML = buttonLabel9.value;
-
-		countBtn1.classList.toggle("inactive-button");
-		countBtn2.classList.toggle("inactive-button");
-		countBtn3.classList.toggle("inactive-button");
-		countBtn4.classList.toggle("inactive-button");
-		countBtn5.classList.toggle("inactive-button");
-		countBtn6.classList.toggle("inactive-button");
-		countBtn7.classList.toggle("inactive-button");
-		countBtn8.classList.toggle("inactive-button");
-		countBtn9.classList.toggle("inactive-button");
-		*/
 	}
 }
 
 function updateRangeValue(v) {
 	rangeTracker1.innerHTML = "current value = " + v;
 }
-
-//
-//
-//
 
 getLocation();
 
@@ -497,8 +433,5 @@ exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
 
 addButton1.addEventListener("click", countPress);
-//addButton2.addEventListener("click", countPress);
-//addButton3.addEventListener("click", countPress);
-
 
 editBtn.addEventListener("click", editPress);
