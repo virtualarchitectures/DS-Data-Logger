@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 
   <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/datawalks.css">
+  <link rel="stylesheet" href="css/styles.css">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -28,16 +28,17 @@
   <meta name="theme-color" content="#fafafa">
 </head>
 
-<body>
-
-  <!-- Add your site or application content here -->
+<body>  
   <div id="shield"><p id="shield-text">You must enable location services and allow this page to know your location to use this web app</p> </div>
-  <h3>Data Stories Range</h3>
+  <header>
+    <h3>Data Stories Range</h3>
+  </header>
   <p id="geo-enabled">Checking for geolocation enabled...</p>
   <p id="read-out">data read out...</p>
   <button class="master-button" id="edit">Edit Range</button>
+  
+  <!-- Map Section -->
   <div class="container-fluid">
-
     <div class="row">
       <div class="col">
         <div id='map'></div>
@@ -49,7 +50,6 @@
         <p class="range-tracker" id="rangeTracker1">current value = 0.5</p>
         <input type="range" id="rangeInput1" name="rangeInput" min="0" max="1" step="0.01" oninput="updateRangeValue(this.value)">
         
-
       </div>
       <div class="col-xs-3">
         <p class="number-tracker" id="countNumberTracker1"></p>
@@ -59,7 +59,6 @@
         <input type="text" id="rangeMax1"></input>
       </div>
     </div>
-    
 
   <div class="row stuck-bottom">
     <div class="col-xs-4">
@@ -74,10 +73,6 @@
   </div>
 </div>
   
-
-
-
-
   <script src="js/vendor/modernizr-3.11.2.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/range.js"></script>
