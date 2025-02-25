@@ -1,141 +1,123 @@
-// initialise mapbox
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGhkcGljIiwiYSI6IkZfUEVoTUUifQ.rNj-tr8788GTdoGnyMEtAQ';
-    var map = new mapboxgl.Map({
-container: 'map', // container ID
-style: 'mapbox://styles/dhdpic/ckny7kaku1c8617pnlfatzqpz', // style URL
+// Initialize a Leaflet map
+var map = L.map('map').setView([51.51, -0.12], 9);
 
-center: [-0.12, 51.51], // starting position [lng, lat]
-zoom: 9 // starting zoom
+// Add a tile layer (using OpenStreetMap as an example)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap'
+}).addTo(map);
 
-});
+// Initialize an empty GeoJSON layer
+var geoJsonLayer = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: Math.abs(feature.properties.range_value) + 1, // Circle radius
+      fillColor: getColorByRangeValue(feature.properties.range_value), // Color based on range_value
+      color: "#fff", // Border color
+      weight: 2, // Border width
+      opacity: 1, // Border opacity
+      fillOpacity: 0.8 // Fill opacity
+    });
+  }
+}).addTo(map);
 
-map.on('load', function () {
-  map.addSource('points', {
-    'type': 'geojson',
-    'data': myJson
+// Helper function to determine circle color based on range_value
+function getColorByRangeValue(range_value) {
+  return range_value < 0 ? '#FFED6F' : '#C97CF7';
+}
 
-});
-
-// Add a symbol layer
-  map.addLayer({
-    'id': 'points',
-    'type': 'circle',
-    'source': 'points',
-    paint: {
-      //'circle-color': '#C97CF7',
-      'circle-radius': ["abs",["+",["get", "range_value"],1]],
-      'circle-stroke-width': 2,
-      'circle-stroke-color': '#fff',
-	  'circle-color': [
-		'case',
-		['<', ['get', 'range_value'], 0],
-		'#FFED6F',
-		['>=', ['get', 'range_value'], 0],
-		'#C97CF7',
-		'#000'
-	  ]
-    }
-  });
-
-});
-
+// Initialize the GeoJSON data object
 var myJson = {
     type: "FeatureCollection",
     features: []
 };
 
 function createJson(id, button_id, button_label, count, range_value, latitude, longitude, altitude, timestamp, iso_date, date, time) {
-	console.log("blah blah json");
-	//
-	if(altitude === null) {
-	myJson.features.push({
-	  "type": "Feature",
-	  "properties":{
-	  	"id":id,
-	  	"button_id":button_id,
-	  	"button_label":button_label,
-	  	"count": count,
-	  	"range_value": range_value,
-	  	"timestamp": timestamp,
-	  	"iso-date": iso_date,
-		date: date,
-	  	"time": time
-
-	  },
-	  "geometry": {
-	    "type": "Point",
-	    "coordinates": [currPosition.coords.longitude, currPosition.coords.latitude]
-	  }
-	});
-
-	} else {
-
-	//
-	myJson.features.push({
-	  "type": "Feature",
-	  "properties":{
-	  	"id":id,
-	  	"button_id":button_id,
-	  	"button_label":button_label,
-	  	"count": count,
-	  	"range_value": range_value,
-	  	"timestamp": timestamp,
-	  	"iso-date": iso_date,
-		date: date,
-	  	"time": time
-
-	  },
-	  "geometry": {
-	    "type": "Point",
-	    "coordinates": [currPosition.coords.longitude, currPosition.coords.latitude, currPosition.coords.altitude]
-	  }
-	});
-}
-//
-console.log(myJson);
+    console.log("blah blah json");
+    if (altitude === null) {
+        myJson.features.push({
+            "type": "Feature",
+            "properties": {
+                "id": id,
+                "button_id": button_id,
+                "button_label": button_label,
+                "count": count,
+                "range_value": range_value,
+                "timestamp": timestamp,
+                "iso-date": iso_date,
+                "date": date,
+                "time": time
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [longitude, latitude]
+            }
+        });
+    } else {
+        myJson.features.push({
+            "type": "Feature",
+            "properties": {
+                "id": id,
+                "button_id": button_id,
+                "button_label": button_label,
+                "count": count,
+                "range_value": range_value,
+                "timestamp": timestamp,
+                "iso-date": iso_date,
+                "date": date,
+                "time": time
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [longitude, latitude, altitude]
+            }
+        });
+    }
+    console.log(myJson);
 }
 
 function mapJson() {
-	map.getSource('points').setData(myJson);
-  	//
-  	var bounds = new mapboxgl.LngLatBounds();
+    // Clear existing data in the geoJsonLayer
+    geoJsonLayer.clearLayers();
 
-  	myJson.features.forEach(function(feature) {
-    	bounds.extend(feature.geometry.coordinates);
-    	console.log(feature);
-	});
+    // Add new data from myJson to the map
+    geoJsonLayer.addData(myJson);
 
-	map.fitBounds(bounds);
+    // Adjust map view to fit the new data
+    if (myJson.features.length > 0) {
+        var bounds = geoJsonLayer.getBounds();
+        map.fitBounds(bounds);
+    }
+
+    console.log("Map updated with new data.");
 }
 
 function exportJson() {
-  
-  console.log("export geojson...");
-  console.log(myJson);
+    console.log("export geojson...");
+    console.log(myJson);
 
-  // Convert object to Blob
-  const blobData = new Blob(
-      [ JSON.stringify(myJson, undefined, 2) ], 
-      { type: 'text/json;charset=utf-8' }
-  )
-  
-  // Convert Blob to URL
-  const blobUrl = URL.createObjectURL(blobData);
-  
-  // Create an a element with blobl URL
-  const anchor = document.createElement('a');
-  anchor.href = blobUrl;
-  anchor.target = "_self";
-  anchor.download = "datawalking.geojson";
-  
-  // Auto click on a element, trigger the file download
-  anchor.click();
-  
-  // Don't forget ;)
-  URL.revokeObjectURL(blobUrl);
+    // Convert object to Blob
+    const blobData = new Blob(
+        [JSON.stringify(myJson, undefined, 2)],
+        { type: 'text/json;charset=utf-8' }
+    )
+
+    // Convert Blob to URL
+    const blobUrl = URL.createObjectURL(blobData);
+
+    // Create an a element with blob URL
+    const anchor = document.createElement('a');
+    anchor.href = blobUrl;
+    anchor.target = "_self";
+    anchor.download = "datawalking.geojson";
+
+    // Auto click on a element, trigger the file download
+    anchor.click();
+
+    // Don't forget ;)
+    URL.revokeObjectURL(blobUrl);
 
 }
-
 function exportJson2() {
 
 	console.log("export geojson new way 2...");
