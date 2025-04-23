@@ -7,7 +7,7 @@ The apps are intended to help people explore matters of concern and gather evide
 
 ### Features
 Simplicity:
-- The apps are intentionally designed to be simple. All you need a mobile device with an internet connection and GPS location enabled.
+- The apps are intentionally designed to be simple. All you need is a mobile device with an internet connection and GPS location enabled.
 - There is nothing to download. You justt need to navigate to the following webpage: [https://virtualarchitectures.github.io/DS-Data-Logger/](https://virtualarchitectures.github.io/DS-Data-Logger/)
 
 Flexibility:  
