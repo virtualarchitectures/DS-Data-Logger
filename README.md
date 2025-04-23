@@ -9,9 +9,11 @@ The apps are intended to help people explore matters of concern and gather evide
 Simplicity:
 - The apps are intentionally designed to be simple. All you need a mobile device with an internet connection and GPS location enabled.
 - There is nothing to download. You justt need to navigate to the following webpage: [https://virtualarchitectures.github.io/DS-Data-Logger/](https://virtualarchitectures.github.io/DS-Data-Logger/)
+
 Flexibility:  
 - The apps provide options to specify what types or categories of information you want to capture.
--  You can use multiple apps at the same time by having them open on separate tabs in your browser.
+- You can use multiple apps at the same time by having them open on separate tabs in your browser.
+
 Privacy:
 - The apps are self-contained, static web pages which do not transmit any data to an external server or database.
 - All of the data you capture is **private** unless you choose to export it and share it yourself.
