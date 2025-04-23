@@ -1,5 +1,5 @@
 # DS-Data-Logger
-A lightweight interface for a collection web-based applications designed for logging geographically located data in the field on a mobile device.
+A lightweight interface for a collection of web-based applications designed for logging geographically located data in the field on a mobile device.
 
 ## Acknowledgements
 
