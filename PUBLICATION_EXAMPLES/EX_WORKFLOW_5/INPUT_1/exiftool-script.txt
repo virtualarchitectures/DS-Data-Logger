@@ -1,2 +1,0 @@
-decimal gps with image direction, copy the line below:
-exiftool -csv -filename -datetimeoriginal -gpslatitude -gpslongitude -n ./ > data.csv
