@@ -26,6 +26,6 @@ Privacy:
 
 ## Acknowledgements
 
-The app in this repository has been forked and adapted from the [DATA_WALKING](https://github.com/DHDPIC/DATA_WALKING) repository on GitHub which was created by designer [David Hunter](http://davidhunterdesign.com/) for the Data Walking project.
+The apps in this repository have been forked and adapted from the [DATA_WALKING](https://github.com/DHDPIC/DATA_WALKING) repository on GitHub which was created by designer [David Hunter](http://davidhunterdesign.com/) for the Data Walking project. The data walking repository and associated website provide additional materials.
 
 Project website: [http://datawalking.com/](http://datawalking.com/)
