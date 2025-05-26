@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearby Addresses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+    }
+    #location, select, button {
+      margin-top: 1em;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h2>Nearby Addresses Dropdown</h2>
+  <div id="location">Location: Not retrieved yet.</div>
+  <button onclick="getNearbyAddresses()">Get Nearby Addresses</button>
+
+  <select id="addressDropdown">
+    <option value="">--Select an address--</option>
+  </select>
+
+  <script>
+    function getNearbyAddresses() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          document.getElementById('location').textContent =
+            `Your location: Latitude ${lat.toFixed(5)}, Longitude ${lon.toFixed(5)}`;
+
+          // Call Nominatim API for nearby places (reverse geocoding)
+          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1&zoom=18`;
+
+          try {
+            const response = await fetch(url, {
+              headers: { 'User-Agent': 'ExampleApp/1.0' } // Nominatim requires this
+            });
+            const data = await response.json();
+
+            const displayName = data.display_name;
+            const dropdown = document.getElementById('addressDropdown');
+            dropdown.innerHTML = '';
+
+            // Add 1 result (Nominatim reverse returns a single location)
+            const option = document.createElement('option');
+            option.text = displayName || "Address not found";
+            option.value = displayName;
+            dropdown.add(option);
+          } catch (error) {
+            alert("Error fetching address: " + error.message);
+          }
+
+        }, (error) => {
+          alert("Geolocation error: " + error.message);
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+  </script>
+</body>
+</html>
