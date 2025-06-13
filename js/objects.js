@@ -46,6 +46,21 @@ const constraints = {
 // HTML element for video placement
 let placer;
 
+async function make() {
+  placer = document.getElementById("vid");
+  canvas = createCanvas(width, height);
+  ctx = canvas.getContext("2d");
+
+  const [video, detector] = await Promise.all([
+    getVideo(),
+    ml5.objectDetector("cocossd"),
+  ]);
+
+  objectDetector = detector;
+  video = video;
+  startDetecting();
+}
+
 async function getVideo() {
   const videoElement = document.createElement("video");
   videoElement.width = 10;
@@ -56,15 +71,8 @@ async function getVideo() {
   try {
     const capture = await navigator.mediaDevices.getUserMedia(constraints);
     videoElement.srcObject = capture;
-
-    // Wait for video to be ready
-    await new Promise((resolve) => {
-      videoElement.onloadedmetadata = () => {
-        resolve();
-      };
-    });
-
     videoElement.play();
+
     videoElement.setAttribute("playsinline", true);
     videoElement.setAttribute("autoplay", true);
     videoElement.setAttribute("muted", true);
@@ -79,7 +87,6 @@ async function getVideo() {
   }
 }
 
-// Create a canvas element
 function createCanvas(w, h) {
   const canvas = document.createElement("canvas");
   canvas.width = w;
@@ -87,28 +94,6 @@ function createCanvas(w, h) {
   placer.appendChild(canvas);
   return canvas;
 }
-
-// Initialize video and object detection model
-async function make() {
-  placer = document.getElementById("vid");
-
-  // Create canvas before getting video, to prepare for rendering as soon as video is ready
-  canvas = createCanvas(width, height);
-  ctx = canvas.getContext("2d");
-
-  // Start fetching video and loading model simultaneously
-  const videoPromise = getVideo();
-  const modelPromise = ml5.objectDetector("cocossd");
-
-  // Wait for both the video and model to be ready
-  video = await videoPromise;
-  objectDetector = await modelPromise;
-
-  // Start detecting once everything is initialized
-  startDetecting();
-}
-
-// Event listener for DOM content loading
 window.addEventListener("DOMContentLoaded", function () {
   make();
 });
