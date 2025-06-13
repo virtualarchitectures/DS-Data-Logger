@@ -91,21 +91,10 @@ function createCanvas(w, h) {
 // Initialize video and object detection model
 async function make() {
   placer = document.getElementById("vid");
-
-  // Create canvas before getting video, to prepare for rendering as soon as video is ready
+  video = await getVideo();
+  objectDetector = await ml5.objectDetector("cocossd", startDetecting);
   canvas = createCanvas(width, height);
   ctx = canvas.getContext("2d");
-
-  // Start fetching video and loading model simultaneously
-  const videoPromise = getVideo();
-  const modelPromise = ml5.objectDetector("cocossd");
-
-  // Wait for both the video and model to be ready
-  video = await videoPromise;
-  objectDetector = await modelPromise;
-
-  // Start detecting once everything is initialized
-  startDetecting();
 }
 
 // Event listener for DOM content loading
@@ -212,6 +201,7 @@ function createJson(
   date,
   time
 ) {
+  //console.log("blah blah json");
   if (altitude === null) {
     myJson.features.push({
       type: "Feature",
@@ -235,6 +225,7 @@ function createJson(
       },
     });
   } else {
+    //
     myJson.features.push({
       type: "Feature",
       properties: {
@@ -258,6 +249,7 @@ function createJson(
       },
     });
   }
+  //
   console.log(myJson);
 }
 
@@ -274,6 +266,7 @@ function createSmallJson(
   date,
   time
 ) {
+  //console.log("blah blah json");
   if (altitude === null) {
     myJson.features.push({
       geometry: {
@@ -350,10 +343,11 @@ var dataHead = [
 ];
 var dataArr = [dataHead];
 
-let recordTimer;
+let recordTimer; // for displaying elapsed time
 let elapsedRecordingTime = 0;
-let mapTimer;
-let snapTimer;
+let mapTimer; // for re-bounding the map
+let snapTimer; // to trigger map update after pressing the button
+
 var addButton = document.getElementById("adder");
 var snapButton = document.getElementById("adder2");
 
@@ -414,10 +408,12 @@ function snapPress() {
     mapJson();
   } else {
     console.log("map me");
+    //mapMe();
   }
   snapTimer = setInterval(timerSnap, 100);
 }
 
+// Handle count button press to start/stop recording
 function countPress() {
   recordData = !recordData;
 
@@ -431,12 +427,13 @@ function countPress() {
       mapJson();
     } else {
       console.log("map me");
+      //mapMe();
     }
   } else {
     addButton.innerHTML = "Start";
     addButton.classList.toggle("recording");
     clearInterval(recordTimer);
-    recordTimer = null;
+    recordTimer = null; //setInterval(timerAverageData,1000);
     clearInterval(mapTimer);
     mapTimer = null;
   }
@@ -447,7 +444,7 @@ function realtimeAdd(objectArr) {
   const { fullDate, date, time } = formatCurrentDateTime();
   var v = 0;
 
-  // New method just make an array of the labels, don't try to make a json array for CSV
+  // new method just make an array of the labels, don't try to make a json array for CSV
   for (let i = 0; i < objectArr.length; i++) {
     let currArr = [
       id + i,
@@ -466,7 +463,7 @@ function realtimeAdd(objectArr) {
     dataArr.push(currArr);
   }
 
-  // Use  only parts of json object and rewrap as json
+  // use  only parts of json object and rewrap as json
   for (let i = 0; i < objectArr.length; i++) {
     createSmallJson(
       id,
