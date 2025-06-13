@@ -8,7 +8,7 @@ var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
       radius: 8,
-      fillColor: getColorByButtonId(feature.properties.button_id),
+      fillColor: "#C97CF7",
       color: "#fff",
       weight: 2,
       opacity: 1,
