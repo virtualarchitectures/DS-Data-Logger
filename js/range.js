@@ -1,3 +1,5 @@
+//----------MAP INITIALIZATION----------//
+
 // Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
@@ -21,10 +23,14 @@ var geoJsonLayer = L.geoJSON(null, {
   },
 }).addTo(map);
 
+//----------UTILITY FUNCTIONS----------//
+
 // Function to determine the circle color based on range value
 function getColorByRangeValue(range_value) {
   return range_value < 0 ? "#FFED6F" : "#C97CF7";
 }
+
+//----------GEOJSON DATA MANAGEMENT----------//
 
 // GeoJSON data object initialization
 var myJson = {
@@ -90,6 +96,8 @@ function createJson(
   console.log(myJson);
 }
 
+//----------VARIABLE INITIALIZATION----------//
+
 // Variables for geolocation, time, buttons, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
@@ -146,6 +154,8 @@ addButton1.value = 0;
 var buttonArr = [addButton1];
 var countTrackerArr = [countTracker1];
 var rangeInputArr = [rangeInput1];
+
+//----------BUTTON INTERACTION LOGIC----------//
 
 // Function to handle button press logic
 function countPress() {
@@ -262,6 +272,8 @@ function editPress() {
 function updateRangeValue(v) {
   rangeTracker1.innerHTML = "current value = " + v;
 }
+
+//----------GEOLOCATION AND EVENT LISTENERS----------//
 
 // Geolocation initialization
 getGeolocation();

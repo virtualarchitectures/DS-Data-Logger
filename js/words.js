@@ -1,3 +1,5 @@
+//----------MAP INITIALIZATION----------//
+
 // Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
@@ -23,6 +25,8 @@ var geoJsonLayer = L.geoJSON(null, {
     layer.bindPopup(feature.properties.text); // Attach a popup with text from GeoJSON properties
   },
 }).addTo(map);
+
+//----------GEOJSON DATA MANAGEMENT----------//
 
 // Function to create a GeoJSON feature and add it to the data object
 var myJson = {
@@ -87,6 +91,8 @@ function createJson(
   console.log(myJson);
 }
 
+//----------VARIABLE INITIALIZATION----------//
+
 // Variables for geolocation, time, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
@@ -130,6 +136,8 @@ addButton.value = 0;
 var buttonArr = [addButton];
 var countTrackerArr = [countTracker1];
 var inputFieldArr = [inputField1];
+
+//----------BUTTON INTERACTION LOGIC----------//
 
 // Function to handle button press logic
 function countPress() {
@@ -216,6 +224,8 @@ function resetData() {
   };
   console.log(dataArr);
 }
+
+//----------GEOLOCATION AND EVENT LISTENERS----------//
 
 // Geolocation initialization
 getGeolocation();

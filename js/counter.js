@@ -1,3 +1,5 @@
+//----------MAP INITIALIZATION----------//
+
 // Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
@@ -21,6 +23,8 @@ var geoJsonLayer = L.geoJSON(null, {
   },
 }).addTo(map);
 
+//----------UTILITY FUNCTIONS----------//
+
 // Function to determine the circle color based on button ID
 function getColorByButtonId(button_id) {
   const colors = {
@@ -36,6 +40,8 @@ function getColorByButtonId(button_id) {
   };
   return colors[button_id] || "#ccc"; // Default color if button_id is not mapped
 }
+
+//----------GEOJSON DATA MANAGEMENT----------//
 
 // GeoJSON data object initialization
 var myJson = {
@@ -104,6 +110,8 @@ function createJson(
   }
   console.log(myJson);
 }
+
+//----------VARIABLE INITIALIZATION----------//
 
 // Variables for geolocation, time, buttons, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
@@ -239,6 +247,8 @@ var countTrackerArr = [
   countTracker8,
   countTracker9,
 ];
+
+//----------BUTTON INTERACTION LOGIC----------//
 
 // Function to handle the button press logic
 function countPress() {
@@ -389,6 +399,8 @@ function editPress() {
     countBtn9.classList.toggle("inactive-button");
   }
 }
+
+//----------GEOLOCATION AND EVENT LISTENERS----------//
 
 // Geolocation initialization
 getGeolocation();
