@@ -47,35 +47,53 @@ function getNearbyAddresses() {
           5
         )}, Longitude ${lon.toFixed(5)}`;
 
-        // Correct Nominatim API endpoint for searching nearby addresses
-        const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18`;
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18&namedetails=1`;
 
         try {
           const response = await fetch(url, {
-            headers: { "User-Agent": "ExampleApp/1.0" }, // Nominatim requires this
+            headers: {
+              "User-Agent": "ExampleApp/1.0",
+            },
           });
-          const data = await response.json();
+          const mainAddress = await response.json();
 
-          if (Array.isArray(data) && data.length > 0) {
-            const dropdown = document.getElementById("addressDropdown");
-            dropdown.innerHTML = "";
+          const searchUrl = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${mainAddress.display_name}&limit=10&addressdetails=1`;
 
-            // Populate dropdown with multiple results
-            data.forEach((place) => {
+          const nearbyResponse = await fetch(searchUrl, {
+            headers: {
+              "User-Agent": "ExampleApp/1.0",
+            },
+          });
+          const nearbyAddresses = await nearbyResponse.json();
+          const dropdown = document.getElementById("addressDropdown");
+          dropdown.innerHTML = '<option value="">Select an address...</option>';
+
+          if (nearbyAddresses.length > 0) {
+            nearbyAddresses.forEach((place) => {
               const option = document.createElement("option");
-              option.text = place.display_name || "Address not found";
-              option.value = place.display_name;
+              option.text = place.display_name;
+              option.value = JSON.stringify({
+                address: place.display_name,
+                lat: place.lat,
+                lon: place.lon,
+              });
               dropdown.add(option);
             });
+
+            dropdown.style.display = "block";
           } else {
-            alert("No addresses found.");
+            alert("No nearby addresses found.");
           }
         } catch (error) {
-          alert("Error fetching addresses: " + error.message);
+          console.error("Error fetching addresses:", error);
+          alert("Error fetching addresses. Please try again later.");
         }
       },
       (error) => {
-        alert("Geolocation error: " + error.message);
+        console.error("Geolocation error:", error);
+        alert(
+          "Unable to get your location. Please check your location permissions."
+        );
       }
     );
   } else {
