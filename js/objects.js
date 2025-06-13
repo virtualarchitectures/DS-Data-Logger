@@ -164,31 +164,6 @@ function resetObjectSpecificData() {
   inputFieldArr[0].value = "Objects recorded...";
 }
 
-// Map event listener for loading and setting source
-map.on("load", function () {
-  map.addSource("points", {
-    type: "geojson",
-    data: myJson,
-  });
-
-  // Add a symbol layer to the map
-  map.addLayer({
-    id: "points",
-    type: "symbol",
-    source: "points",
-    layout: {
-      "text-field": ["get", "label"],
-      "text-size": 10,
-      "text-allow-overlap": true,
-    },
-    paint: {
-      "text-halo-color": "#C97CF7",
-      "text-halo-width": 0.5,
-      "text-halo-blur": 0.5,
-    },
-  });
-});
-
 //----------GEOJSON DATA MANAGEMENT----------//
 
 // Initialize GeoJSON object to store detected object data
@@ -383,7 +358,8 @@ var inputFieldArr = [inputField1];
 function timerAverageData() {
   console.log("timer hit");
   console.log(myJson);
-  map.getSource("points").setData(myJson);
+  geoJsonLayer.clearLayers();
+  geoJsonLayer.addData(myJson);
 
   // Increment timer display
   elapsedRecordingTime++;
@@ -405,7 +381,8 @@ function timerMap() {
 // Timer callback for map updates after snap
 function timerSnap() {
   console.log("T I M E R S N A P");
-  map.getSource("points").setData(myJson);
+  geoJsonLayer.clearLayers();
+  geoJsonLayer.addData(myJson);
   clearInterval(snapTimer);
   snapTimer = null;
 }
