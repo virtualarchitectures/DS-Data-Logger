@@ -37,6 +37,7 @@ async function getVideo() {
       };
     });
 
+    // Start playing after metadata is loaded
     videoElement.play();
     videoElement.setAttribute("playsinline", true);
     videoElement.setAttribute("autoplay", true);
