@@ -1,17 +1,17 @@
-// Initialize Leaflet map
+// Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
-// Add a tile layer (using OpenStreetMap as an example)
+// Add a tile layer using OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: "© OpenStreetMap",
 }).addTo(map);
 
-// Initialize an empty GeoJSON layer
+// Initialize an empty GeoJSON layer for displaying data points on the map
 var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
-      radius: 8, // Circle radius
+      radius: 8,
       fillColor: "#C97CF7",
       color: "#fff",
       weight: 1,
@@ -20,11 +20,11 @@ var geoJsonLayer = L.geoJSON(null, {
     });
   },
   onEachFeature: function (feature, layer) {
-    layer.bindPopup(feature.properties.text); // Display the text from GeoJSON properties
+    layer.bindPopup(feature.properties.text); // Attach a popup with text from GeoJSON properties
   },
 }).addTo(map);
 
-// Initialize the GeoJSON data object
+// Function to create a GeoJSON feature and add it to the data object
 var myJson = {
   type: "FeatureCollection",
   features: [],
@@ -53,7 +53,7 @@ function createJson(
         button_id: button_id,
         button_label: button_label,
         count: count,
-        text: the_text,
+        text: the_text, // Store the text property
         timestamp: timestamp,
         "iso-date": iso_date,
         date: date,
@@ -87,7 +87,7 @@ function createJson(
   console.log(myJson);
 }
 
-// Variables for geo, time, buttons, data
+// Variables for geolocation, time, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
 
@@ -115,6 +115,7 @@ var dataHead = [
 ];
 var dataArr = [dataHead];
 
+// Button and input field variables initialization
 var addButton = document.getElementById("adder");
 
 var countTracker1 = document.getElementById("countNumberTracker1");
@@ -130,6 +131,7 @@ var buttonArr = [addButton];
 var countTrackerArr = [countTracker1];
 var inputFieldArr = [inputField1];
 
+// Function to handle button press logic
 function countPress() {
   currDate = new Date();
   let yr = currDate.getFullYear();
@@ -139,6 +141,7 @@ function countPress() {
   let mn = currDate.getMinutes();
   let sc = currDate.getSeconds();
 
+  // Add leading zeros to date/time values
   if (mo < 10) {
     mo = "0" + mo;
   }
@@ -158,14 +161,14 @@ function countPress() {
   id++;
   countArr[this.value]++;
   var v = countArr[this.value];
-  var t = inputFieldArr[this.value].value;
+  var t = inputFieldArr[this.value].value; // Get the text from input
 
   var currArr = [
     id,
     Number(this.value),
     this.innerHTML,
     v,
-    '"' + t + '"',
+    '"' + t + '"', // Store text with quotes
     currPosition.coords.latitude,
     currPosition.coords.longitude,
     currPosition.coords.altitude,
@@ -177,9 +180,10 @@ function countPress() {
   dataArr.push(currArr);
 
   console.log(dataArr);
+
   countTrackerArr[this.value].innerHTML = v;
-  inputFieldArr[this.value].value = "";
-  inputFieldArr[this.value].focus();
+  inputFieldArr[this.value].value = ""; // Clear the input field
+  inputFieldArr[this.value].focus(); // Focus back to input field
   dataReadOut.innerHTML = currArr;
 
   createJson(
@@ -199,13 +203,13 @@ function countPress() {
   mapJson();
 }
 
+// Function to reset data and GeoJSON object
 function resetData() {
   id = 0;
   dataArr = [dataHead];
   countArr = [0];
   countTracker1.innerHTML = 0;
 
-  // Reset GeoJSON
   myJson = {
     type: "FeatureCollection",
     features: [],
@@ -213,9 +217,10 @@ function resetData() {
   console.log(dataArr);
 }
 
-// Geolocation
+// Geolocation initialization
 getGeolocation();
 
+// Add event listeners to buttons
 resetDataBtn.addEventListener("click", resetData);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
