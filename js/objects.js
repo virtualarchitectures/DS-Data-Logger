@@ -19,6 +19,7 @@ var geoJsonLayer = L.geoJSON(null, {
 
 //----------OBJECT DETECTION AND TRACKING----------//
 
+// Set camera constraints for video capture
 const constraints = {
   audio: false,
   video: {
@@ -28,10 +29,12 @@ const constraints = {
   },
 };
 
+// Variables to control data capture and storage
 let snapData = false;
 let recordData = false;
 let objectId = 0;
 
+// Variables for object detector and video capture
 let objectDetector;
 let status;
 let objects = [];
@@ -40,26 +43,24 @@ let canvas, ctx;
 const width = 480;
 const height = 360;
 
+// HTML element for video placement
 let placer;
 
+// Initialize video and object detection model
 async function make() {
   placer = document.getElementById("vid");
-  // get the video
   video = await getVideo();
-
-  console.log("before model");
-
   objectDetector = await ml5.objectDetector("cocossd", startDetecting);
-
   canvas = createCanvas(width, height);
   ctx = canvas.getContext("2d");
 }
 
-// when the dom is loaded, call make();
+// Event listener for DOM content loading
 window.addEventListener("DOMContentLoaded", function () {
   make();
 });
 
+// Callback function for processing each detected object
 function loopObjects(item, index, arr) {
   if (index < arr.length - 1) {
     inputFieldArr[0].value += item.label + ", ";
@@ -68,12 +69,12 @@ function loopObjects(item, index, arr) {
   }
 }
 
+// Start object detection
 function startDetecting() {
-  console.log("model ready");
-  console.log(objectDetector);
   detect();
 }
 
+// Perform detection and draw results
 function detect() {
   objectDetector.detect(video, function (err, results) {
     if (err) {
@@ -81,25 +82,15 @@ function detect() {
       return;
     }
     objects = results;
-    //console.log(objects[0].label, objects[0].confidence.toFixed(3));
-    //console.log(objects.length);
 
     if (objects) {
       draw();
       if (recordData || snapData) {
-        //console.log(objects);
-        //inputFieldArr[0].value += "\n" + objects[0].label;
-
-        // add objects to textfield
+        // Add objects to textfield
         if (objects.length > 0) {
           inputFieldArr[0].value += "\n";
           objects.forEach(loopObjects);
           inputFieldArr[0].scrollTop = inputFieldArr[0].scrollHeight;
-          //add data function
-          //console.log(objects);
-
-          // this works
-          //realtimeAdd(JSON.stringify(objects));
           realtimeAdd(objects);
         }
         snapData = false;
@@ -139,17 +130,14 @@ function draw() {
 
 //----------UTILITY FUNCTIONS----------//
 
+// Get video stream from the user's camera
 async function getVideo() {
-  // Grab elements, create settings, etc.
   const videoElement = document.createElement("video");
-  //videoElement.setAttribute("style", "display: none;");
-  videoElement.width = 10; //width;
-  videoElement.height = 10; //height;
+  videoElement.width = 10;
+  videoElement.height = 10;
   let hiddenVideo = document.querySelector("#hiddenvid");
   hiddenVideo.appendChild(videoElement);
-  //document.body.appendChild(videoElement);
 
-  // Create a webcam capture
   const capture = await navigator.mediaDevices.getUserMedia(constraints);
   videoElement.srcObject = capture;
   videoElement.play();
@@ -161,6 +149,7 @@ async function getVideo() {
   return videoElement;
 }
 
+// Create a canvas element
 function createCanvas(w, h) {
   const canvas = document.createElement("canvas");
   canvas.width = w;
@@ -169,13 +158,14 @@ function createCanvas(w, h) {
   return canvas;
 }
 
+// Map event listener for loading and setting source
 map.on("load", function () {
   map.addSource("points", {
     type: "geojson",
     data: myJson,
   });
 
-  // Add a symbol layer
+  // Add a symbol layer to the map
   map.addLayer({
     id: "points",
     type: "symbol",
@@ -193,16 +183,21 @@ map.on("load", function () {
   });
 });
 
+//----------GEOJSON DATA MANAGEMENT----------//
+
+// Initialize GeoJSON object to store detected object data
 var myJson = {
   type: "FeatureCollection",
   features: [],
 };
 
+// Initialize a smaller GeoJSON data structure
 var dotJson = {
   type: "FeatureCollection",
   features: [],
 };
 
+// Create a GeoJSON feature and add it to the data object
 function createJson(
   id,
   button_id,
@@ -269,6 +264,7 @@ function createJson(
   console.log(myJson);
 }
 
+// Create a smaller GeoJSON feature with limited properties
 function createSmallJson(
   id,
   the_label,
@@ -324,7 +320,6 @@ function createSmallJson(
       },
     });
   }
-  //console.log(myJson);
 }
 
 //----------VARIABLE INITIALIZATION----------//
@@ -361,7 +356,7 @@ var dataArr = [dataHead];
 
 let recordTimer; // for displaying elapsed time
 let elapsedRecordingTime = 0;
-let mapTimer; //for re-bounding the map
+let mapTimer; // for re-bounding the map
 let snapTimer; // to trigger map update after pressing the button
 
 var addButton = document.getElementById("adder");
@@ -372,22 +367,25 @@ countTracker1.innerHTML = "0s";
 
 var inputField1 = document.getElementById("inputField1");
 
-// array to store counts
+// Array to store counts
 var countArr = [0];
 
-// storing button id values
+// Storing button id values
 addButton.value = 0;
 
 var buttonArr = [addButton];
 var countTrackerArr = [countTracker1];
 var inputFieldArr = [inputField1];
 
+//----------TIMER AND MAP UPDATE FUNCTIONS----------//
+
+// Handle timer events for map and data updating
 function timerAverageData() {
   console.log("timer hit");
   console.log(myJson);
   map.getSource("points").setData(myJson);
 
-  // increment timer display
+  // Increment timer display
   elapsedRecordingTime++;
   let mins = Math.floor(elapsedRecordingTime / 60);
   let secs = elapsedRecordingTime % 60;
@@ -398,11 +396,13 @@ function timerAverageData() {
   }
 }
 
+// Timer callback for map updates
 function timerMap() {
   console.log("T I M E R M A P");
   mapJson();
 }
 
+// Timer callback for map updates after snap
 function timerSnap() {
   console.log("T I M E R S N A P");
   map.getSource("points").setData(myJson);
@@ -410,19 +410,19 @@ function timerSnap() {
   snapTimer = null;
 }
 
+// Handle snap button press for capturing data
 function snapPress() {
   snapData = true;
   if (myJson.features.length > 0) {
     mapJson();
   } else {
     console.log("map me");
-    mapMe();
-
-    //console.log("Src= ", map.getSource('points'))
+    //mapMe();
   }
   snapTimer = setInterval(timerSnap, 100);
 }
 
+// Handle count button press to start/stop recording
 function countPress() {
   recordData = !recordData;
 
@@ -436,7 +436,7 @@ function countPress() {
       mapJson();
     } else {
       console.log("map me");
-      mapMe();
+      //mapMe();
     }
   } else {
     addButton.innerHTML = "Start";
@@ -448,34 +448,12 @@ function countPress() {
   }
 }
 
+// Add detected object data in real-time
 function realtimeAdd(objectArr) {
-  currDate = new Date();
-  let yr = currDate.getFullYear();
-  let mo = currDate.getMonth() + 1;
-  let dt = currDate.getDate();
-  let hr = currDate.getHours();
-  let mn = currDate.getMinutes();
-  let sc = currDate.getSeconds();
-  //
-  if (mo < 10) {
-    mo = "0" + mo;
-  }
-  if (dt < 10) {
-    dt = "0" + dt;
-  }
-  if (hr < 10) {
-    hr = "0" + hr;
-  }
-  if (mn < 10) {
-    mn = "0" + mn;
-  }
-  if (sc < 10) {
-    sc = "0" + sc;
-  }
+  const { fullDate, date, time } = formatCurrentDateTime();
+  var v = 0;
 
-  var v = 0; //countArr[this.value];
   // new method just make an array of the labels, don't try to make a json array for CSV
-  var objectList = [];
   for (let i = 0; i < objectArr.length; i++) {
     let currArr = [
       id + i,
@@ -487,15 +465,14 @@ function realtimeAdd(objectArr) {
       currPosition.coords.longitude,
       currPosition.coords.altitude,
       currPosition.coords.timestamp,
-      yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
-      yr + "-" + mo + "-" + dt,
-      hr + ":" + mn + ":" + sc,
+      fullDate,
+      date,
+      time,
     ];
     dataArr.push(currArr);
   }
 
   // use  only parts of json object and rewrap as json
-  var reducedJSON = [];
   for (let i = 0; i < objectArr.length; i++) {
     createSmallJson(
       id,
@@ -505,20 +482,22 @@ function realtimeAdd(objectArr) {
       currPosition.coords.longitude,
       currPosition.coords.altitude,
       currPosition.coords.timestamp,
-      yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
-      yr + "-" + mo + "-" + dt,
-      hr + ":" + mn + ":" + sc
+      fullDate,
+      date,
+      time
     );
     id++;
   }
 }
 
-// map export functions
+//----------MAP EXPORT----------//
+
+// Map export function to export the map as an image
 function exportMap() {
-  console.log("export a map time!");
   map.getCanvas().toBlob(mapBlobHandler);
 }
 
+// Blob handler for exported map data
 function mapBlobHandler(content) {
   var blobUrl = URL.createObjectURL(content);
   //
@@ -530,7 +509,7 @@ function mapBlobHandler(content) {
   link.click();
 }
 
-// Function to handle specific object.js resets
+// Reset function for object-specific data
 function resetObjectSpecificData() {
   elapsedRecordingTime = 0;
   inputFieldArr[0].value = "Objects recorded...";
