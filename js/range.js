@@ -1,37 +1,38 @@
-// Initialize a Leaflet map
+// Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
-// Add a tile layer (using OpenStreetMap as an example)
+// Add a tile layer using OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: "© OpenStreetMap",
 }).addTo(map);
 
-// Initialize an empty GeoJSON layer
+// Initialize an empty GeoJSON layer for displaying data points on the map
 var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
-      radius: Math.abs(feature.properties.range_value) + 1, // Circle radius
-      fillColor: getColorByRangeValue(feature.properties.range_value), // Color based on range_value
-      color: "#fff", // Border color
-      weight: 2, // Border width
-      opacity: 1, // Border opacity
-      fillOpacity: 0.8, // Fill opacity
+      radius: Math.abs(feature.properties.range_value) + 1,
+      fillColor: getColorByRangeValue(feature.properties.range_value),
+      color: "#fff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8,
     });
   },
 }).addTo(map);
 
-// Helper function to determine circle color based on range_value
+// Function to determine the circle color based on range value
 function getColorByRangeValue(range_value) {
   return range_value < 0 ? "#FFED6F" : "#C97CF7";
 }
 
-// Initialize the GeoJSON data object
+// GeoJSON data object initialization
 var myJson = {
   type: "FeatureCollection",
   features: [],
 };
 
+// Function to create a GeoJSON feature
 function createJson(
   id,
   button_id,
@@ -46,7 +47,7 @@ function createJson(
   date,
   time
 ) {
-  console.log("blah blah json");
+  console.log("Adding to GeoJSON");
   if (altitude === null) {
     myJson.features.push({
       type: "Feature",
@@ -89,12 +90,11 @@ function createJson(
   console.log(myJson);
 }
 
-// variables for geo, time, buttons, data
+// Variables for geolocation, time, buttons, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
 
 var currPosition;
-
 var currDate = new Date();
 
 var resetDataBtn = document.getElementById("resetData");
@@ -118,6 +118,7 @@ var dataHead = [
 ];
 var dataArr = [dataHead];
 
+// Button and range tracker variables initialization
 var addButton1 = document.getElementById("adder1");
 buttonLabel1.value = addButton1.innerHTML;
 
@@ -132,21 +133,21 @@ var rangeMax1 = document.getElementById("rangeMax1");
 rangeMin1.value = rangeInput1.min;
 rangeMax1.value = rangeInput1.max;
 
-// variables for editing
+// Editing related variables
 var currEdit = false;
 var editBtn = document.getElementById("edit");
 
-// array to store counts
+// Array to store counts
 var countArr = [0];
 
-// storing button id values
+// Storing button id values
 addButton1.value = 0;
 
 var buttonArr = [addButton1];
 var countTrackerArr = [countTracker1];
-//var inputFieldArr = [inputField1];
 var rangeInputArr = [rangeInput1];
 
+// Function to handle button press logic
 function countPress() {
   currDate = new Date();
   let yr = currDate.getFullYear();
@@ -155,12 +156,16 @@ function countPress() {
   let hr = currDate.getHours();
   let mn = currDate.getMinutes();
   let sc = currDate.getSeconds();
-  //
+
+  // Add leading zeros to date/time values
   if (mo < 10) {
     mo = "0" + mo;
   }
   if (dt < 10) {
     dt = "0" + dt;
+  }
+  if (hr < 10) {
+    hr = "0" + hr;
   }
   if (mn < 10) {
     mn = "0" + mn;
@@ -168,14 +173,12 @@ function countPress() {
   if (sc < 10) {
     sc = "0" + sc;
   }
-  //
+
   id++;
-  //this.value++;
-  //countTrack1.innerHTML = this.value;
   countArr[this.value]++;
   var v = countArr[this.value];
-  //var t = inputFieldArr[this.value].value;
-  var r = rangeInputArr[this.value].value;
+  var r = rangeInputArr[this.value].value; // Get range value
+
   var currArr = [
     id,
     Number(this.value),
@@ -191,12 +194,10 @@ function countPress() {
     hr + ":" + mn + ":" + sc,
   ];
   dataArr.push(currArr);
-  //
+
   console.log(dataArr);
-  //
+
   countTrackerArr[this.value].innerHTML = v;
-  //inputFieldArr[this.value].value = ""
-  //
   dataReadOut.innerHTML = currArr;
 
   createJson(
@@ -216,24 +217,21 @@ function countPress() {
   mapJson();
 }
 
+// Function to reset data and GeoJSON object
 function resetData() {
-  //
   id = 0;
   dataArr = [dataHead];
-  countArr = [0, 0, 0];
+  countArr = [0];
   countTracker1.innerHTML = 0;
-  //countTracker2.innerHTML = 0;
-  //countTracker3.innerHTML = 0;
-  //
-  // reset json
+
   myJson = {
     type: "FeatureCollection",
     features: [],
   };
-  //
   console.log(dataArr);
 }
 
+// Function to handle edit/save button logic
 function editPress() {
   currEdit = !currEdit;
   if (currEdit) {
@@ -253,20 +251,22 @@ function editPress() {
     rangeMin1.style.visibility = "hidden";
     rangeMax1.style.visibility = "hidden";
 
-    rangeInput1.min = rangeMin1.value;
-    rangeInput1.max = rangeMax1.value;
+    rangeInput1.min = rangeMin1.value; // Update range input minimum
+    rangeInput1.max = rangeMax1.value; // Update range input maximum
 
     addButton1.classList.toggle("inactive-button");
   }
 }
 
+// Function to update the displayed range value
 function updateRangeValue(v) {
   rangeTracker1.innerHTML = "current value = " + v;
 }
 
-// Geolocation
+// Geolocation initialization
 getGeolocation();
 
+// Add event listeners to buttons
 resetDataBtn.addEventListener("click", resetData);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
