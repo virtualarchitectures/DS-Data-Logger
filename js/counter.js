@@ -385,7 +385,15 @@ getGeolocation();
 
 // Add event listeners to buttons
 resetDataBtn.addEventListener("click", () =>
-  resetData(dataArr, dataHead, countArr, countTrackerArr, myJson)
+  resetData(
+    dataArr,
+    dataHead,
+    countArr,
+    countTrackerArr,
+    myJson,
+    map,
+    geoJsonLayer
+  )
 );
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);

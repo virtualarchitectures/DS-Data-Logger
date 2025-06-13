@@ -91,8 +91,16 @@ function getSaveDate() {
   return yr + "-" + mo + "-" + dt + "-" + hr + "-" + mn + "-" + sc;
 }
 
-// Function to reset data arrays and trackers before saving new data
-function resetData(dataArr, dataHead, countArr, countTrackers, geoJsonObj) {
+// Function to reset data arrays, trackers and map layer before saving new data
+function resetData(
+  dataArr,
+  dataHead,
+  countArr,
+  countTrackers,
+  geoJsonObj,
+  map,
+  geoJsonLayer
+) {
   // Reset ID
   let id = 0;
 
@@ -107,6 +115,9 @@ function resetData(dataArr, dataHead, countArr, countTrackers, geoJsonObj) {
   countTrackers.forEach((tracker) => {
     tracker.innerHTML = "0";
   });
+
+  // Clear map layer
+  geoJsonLayer.clearLayers();
 
   // Reset GeoJSON object
   geoJsonObj.type = "FeatureCollection";
