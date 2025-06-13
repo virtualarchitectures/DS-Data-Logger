@@ -1,4 +1,4 @@
-//----------Geolocation Functions----------//
+//----------GEOLOCATION----------//
 
 // Function to get the current location of the user
 function getGeolocation() {
@@ -40,7 +40,7 @@ function trackPosition(position) {
   window.currPosition = position;
 }
 
-//----------Map Visualisation Functions----------//
+//----------MAP VISUALISATION----------//
 
 // Function to update the map with new GeoJSON data
 function mapJson() {
@@ -59,7 +59,7 @@ function mapJson() {
   console.log("Map updated with new data.");
 }
 
-//----------Data Preparation Functions----------//
+//----------DATA PREPARATION----------//
 
 // Function to generate a timestamp for saving data
 function getSaveDate() {
@@ -91,7 +91,7 @@ function getSaveDate() {
   return yr + "-" + mo + "-" + dt + "-" + hr + "-" + mn + "-" + sc;
 }
 
-//----------Data Export Functions----------//
+//----------DATA EXPORT----------//
 
 // CSV Export Functions
 function exportCSV() {
