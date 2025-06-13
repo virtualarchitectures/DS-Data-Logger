@@ -28,7 +28,7 @@ let objectId = 0;
 let objectDetector;
 let status;
 let objects = [];
-let video;
+let videoElement;
 let canvas, ctx;
 const width = 480;
 const height = 360;
@@ -57,7 +57,7 @@ async function make() {
   ]);
 
   objectDetector = detector;
-  video = video;
+  videoElement = video;
   startDetecting();
 }
 
@@ -71,8 +71,15 @@ async function getVideo() {
   try {
     const capture = await navigator.mediaDevices.getUserMedia(constraints);
     videoElement.srcObject = capture;
-    videoElement.play();
 
+    // Add a promise to wait for video to load
+    await new Promise((resolve) => {
+      videoElement.onloadeddata = () => {
+        resolve();
+      };
+    });
+
+    videoElement.play();
     videoElement.setAttribute("playsinline", true);
     videoElement.setAttribute("autoplay", true);
     videoElement.setAttribute("muted", true);
@@ -114,7 +121,7 @@ function startDetecting() {
 
 // Perform detection and draw results
 function detect() {
-  objectDetector.detect(video, function (err, results) {
+  objectDetector.detect(videoElement, function (err, results) {
     if (err) {
       console.log(err);
       return;
@@ -144,7 +151,7 @@ function draw() {
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, width, height);
 
-  ctx.drawImage(video, 0, 0);
+  ctx.drawImage(videoElement, 0, 0);
   for (let i = 0; i < objects.length; i += 1) {
     ctx.font = "16px Arial";
     if (recordData) {
