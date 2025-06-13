@@ -37,23 +37,6 @@ function getColorByButtonId(button_id) {
   return colors[button_id] || "#ccc"; // Default color if button_id is not mapped
 }
 
-// Function to update the map with new GeoJSON data
-function mapJson() {
-  // Clear existing data
-  geoJsonLayer.clearLayers();
-
-  // Add new data
-  geoJsonLayer.addData(myJson);
-
-  // Adjust map view to fit the new data
-  if (myJson.features.length > 0) {
-    var bounds = geoJsonLayer.getBounds();
-    map.fitBounds(bounds);
-  }
-
-  console.log("Map updated with new data.");
-}
-
 // Initialize the GeoJSON data object
 var myJson = {
   type: "FeatureCollection",
@@ -122,22 +105,6 @@ function createJson(
   }
   //
   console.log(myJson);
-}
-
-function mapJson() {
-  // Clear existing data in the geoJsonLayer
-  geoJsonLayer.clearLayers();
-
-  // Add new data from myJson to the map
-  geoJsonLayer.addData(myJson);
-
-  // Adjust map view to fit the new data
-  if (myJson.features.length > 0) {
-    var bounds = geoJsonLayer.getBounds();
-    map.fitBounds(bounds);
-  }
-
-  console.log("Map updated with new data.");
 }
 
 // variables for geo, time, buttons, data

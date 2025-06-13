@@ -87,22 +87,6 @@ function createJson(
   console.log(myJson);
 }
 
-function mapJson() {
-  // Clear existing data in the geoJsonLayer
-  geoJsonLayer.clearLayers();
-
-  // Add new data
-  geoJsonLayer.addData(myJson);
-
-  // Adjust map view to fit the new data
-  if (myJson.features.length > 0) {
-    var bounds = geoJsonLayer.getBounds();
-    map.fitBounds(bounds);
-  }
-
-  console.log("Map updated with new data.");
-}
-
 // Variables for geo, time, buttons, data
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
