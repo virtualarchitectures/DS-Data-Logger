@@ -97,49 +97,26 @@ function createJson(
 
 // Function to format the current date/time
 function formatCurrentDateTime() {
-  var currDate = new Date();
-  let yr = currDate.getFullYear();
-  let mo = (currDate.getMonth() + 1).toString().padStart(2, "0");
-  let dt = currDate.getDate().toString().padStart(2, "0");
-  let hr = currDate.getHours().toString().padStart(2, "0");
-  let mn = currDate.getMinutes().toString().padStart(2, "0");
-  let sc = currDate.getSeconds().toString().padStart(2, "0");
+  const currDate = new Date();
+  const yr = currDate.getFullYear();
+  const mo = (currDate.getMonth() + 1).toString().padStart(2, "0");
+  const dt = currDate.getDate().toString().padStart(2, "0");
+  const hr = currDate.getHours().toString().padStart(2, "0");
+  const mn = currDate.getMinutes().toString().padStart(2, "0");
+  const sc = currDate.getSeconds().toString().padStart(2, "0");
+
+  const tzOffset = -currDate.getTimezoneOffset();
+  const tzHr = String(Math.floor(tzOffset / 60)).padStart(2, "0");
+  const tzMn = String(Math.abs(tzOffset % 60)).padStart(2, "0");
+  const tzSign = tzOffset >= 0 ? "+" : "-";
 
   return {
-    fullDate: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}`,
+    dateTime: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}`,
     date: `${yr}-${mo}-${dt}`,
     time: `${hr}:${mn}:${sc}`,
+    isoDateTime: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}${tzSign}${tzHr}:${tzMn}`,
+    saveDate: `${yr}-${mo}-${dt}-${hr}-${mn}-${sc}`,
   };
-}
-
-// Function to generate a timestamp for saving data
-function getSaveDate() {
-  let saveDate = new Date();
-  let yr = currDate.getFullYear();
-  let mo = currDate.getMonth() + 1;
-  let dt = currDate.getDate();
-  let hr = currDate.getHours();
-  let mn = currDate.getMinutes();
-  let sc = currDate.getSeconds();
-
-  // Format date/time values with leading zeros if necessary
-  if (mo < 10) {
-    mo = "0" + mo;
-  }
-  if (dt < 10) {
-    dt = "0" + dt;
-  }
-  if (hr < 10) {
-    hr = "0" + hr;
-  }
-  if (mn < 10) {
-    mn = "0" + mn;
-  }
-  if (sc < 10) {
-    sc = "0" + sc;
-  }
-
-  return yr + "-" + mo + "-" + dt + "-" + hr + "-" + mn + "-" + sc;
 }
 
 // Function to reset data arrays, trackers and map layer before saving new data
@@ -205,7 +182,7 @@ function exportCSV2() {
   });
 
   // Get a formatted current date string
-  let dateStr = getSaveDate();
+  let dateStr = formatCurrentDateTime().saveDate; // Use saveDate format
 
   // Create a Blob for the CSV data
   const blobData = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
@@ -254,7 +231,7 @@ function exportJson2() {
   console.log(myJson);
 
   // Get a formatted current date string
-  let dateStr = getSaveDate();
+  let dateStr = formatCurrentDateTime().saveDate; // Use saveDate format
 
   // Convert GeoJSON object to a Blob
   const blobData = new Blob([JSON.stringify(myJson, undefined, 2)], {
