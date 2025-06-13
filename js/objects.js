@@ -19,6 +19,23 @@ var geoJsonLayer = L.geoJSON(null, {
 
 //----------OBJECT DETECTION AND TRACKING----------//
 
+// Variables to control data capture and storage
+let snapData = false;
+let recordData = false;
+let objectId = 0;
+
+// Variables for object detector and video capture
+let objectDetector;
+let status;
+let objects = [];
+let video;
+let canvas, ctx;
+const width = 480;
+const height = 360;
+
+// HTML element for video placement
+let placer;
+
 async function getVideo() {
   const videoElement = document.createElement("video");
   videoElement.width = 10;
@@ -70,23 +87,6 @@ const constraints = {
     },
   },
 };
-
-// Variables to control data capture and storage
-let snapData = false;
-let recordData = false;
-let objectId = 0;
-
-// Variables for object detector and video capture
-let objectDetector;
-let status;
-let objects = [];
-let video;
-let canvas, ctx;
-const width = 480;
-const height = 360;
-
-// HTML element for video placement
-let placer;
 
 // Initialize video and object detection model
 async function make() {
