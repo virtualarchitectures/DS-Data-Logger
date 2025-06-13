@@ -1,13 +1,7 @@
 //----------MAP INITIALIZATION----------//
 
 // Initialize a Leaflet map instance
-var map = L.map("map").setView([53.35014, -6.266155], 9);
-
-// Add a tile layer using OpenStreetMap
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "© OpenStreetMap",
-}).addTo(map);
+var map = leafletMap();
 
 // Initialize an empty GeoJSON layer for displaying data points on the map
 var geoJsonLayer = L.geoJSON(null, {
