@@ -521,7 +521,7 @@ function resetObjectSpecificData() {
 getGeolocation();
 
 resetDataBtn.addEventListener("click", () => {
-  resetDataState(
+  resetData(
     dataArr,
     dataHead,
     countArr,
