@@ -211,27 +211,15 @@ function countPress() {
   mapJson();
 }
 
-// Function to reset data and GeoJSON object
-function resetData() {
-  id = 0;
-  dataArr = [dataHead];
-  countArr = [0];
-  countTracker1.innerHTML = 0;
-
-  myJson = {
-    type: "FeatureCollection",
-    features: [],
-  };
-  console.log(dataArr);
-}
-
 //----------GEOLOCATION AND EVENT LISTENERS----------//
 
 // Geolocation initialization
 getGeolocation();
 
 // Add event listeners to buttons
-resetDataBtn.addEventListener("click", resetData);
+resetDataBtn.addEventListener("click", () =>
+  resetData(dataArr, dataHead, countArr, countTrackerArr, myJson)
+);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
 

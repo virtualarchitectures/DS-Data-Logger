@@ -59,7 +59,7 @@ function mapJson() {
   console.log("Map updated with new data.");
 }
 
-//----------DATA PREPARATION----------//
+//----------DATA PREPARATION AND HANDLING----------//
 
 // Function to generate a timestamp for saving data
 function getSaveDate() {
@@ -89,6 +89,30 @@ function getSaveDate() {
   }
 
   return yr + "-" + mo + "-" + dt + "-" + hr + "-" + mn + "-" + sc;
+}
+
+// Function to reset data arrays and trackers before saving new data
+function resetData(dataArr, dataHead, countArr, countTrackers, geoJsonObj) {
+  // Reset ID
+  let id = 0;
+
+  // Reset data array with headers
+  dataArr.length = 0;
+  dataArr.push(dataHead);
+
+  // Reset count array
+  countArr.fill(0);
+
+  // Reset count tracker display elements
+  countTrackers.forEach((tracker) => {
+    tracker.innerHTML = "0";
+  });
+
+  // Reset GeoJSON object
+  geoJsonObj.type = "FeatureCollection";
+  geoJsonObj.features.length = 0;
+
+  console.log(dataArr);
 }
 
 //----------DATA EXPORT----------//

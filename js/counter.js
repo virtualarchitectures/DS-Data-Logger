@@ -317,28 +317,6 @@ function countPress() {
   mapJson();
 }
 
-// Function to reset data and geoJSON object
-function resetData() {
-  id = 0;
-  dataArr = [dataHead];
-  countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  countTracker1.innerHTML = 0;
-  countTracker2.innerHTML = 0;
-  countTracker3.innerHTML = 0;
-  countTracker4.innerHTML = 0;
-  countTracker5.innerHTML = 0;
-  countTracker6.innerHTML = 0;
-  countTracker7.innerHTML = 0;
-  countTracker8.innerHTML = 0;
-  countTracker9.innerHTML = 0;
-
-  myJson = {
-    type: "FeatureCollection",
-    features: [],
-  };
-  console.log(dataArr);
-}
-
 // Function to handle the edit/save button logic for label editing
 function editPress() {
   currEdit = !currEdit;
@@ -406,7 +384,9 @@ function editPress() {
 getGeolocation();
 
 // Add event listeners to buttons
-resetDataBtn.addEventListener("click", resetData);
+resetDataBtn.addEventListener("click", () =>
+  resetData(dataArr, dataHead, countArr, countTrackerArr, myJson)
+);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
 
