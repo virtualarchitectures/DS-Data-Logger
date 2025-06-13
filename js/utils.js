@@ -95,6 +95,23 @@ function createJson(
   console.log(myJson);
 }
 
+// Function to format the current date/time
+function formatCurrentDateTime() {
+  var currDate = new Date();
+  let yr = currDate.getFullYear();
+  let mo = (currDate.getMonth() + 1).toString().padStart(2, "0");
+  let dt = currDate.getDate().toString().padStart(2, "0");
+  let hr = currDate.getHours().toString().padStart(2, "0");
+  let mn = currDate.getMinutes().toString().padStart(2, "0");
+  let sc = currDate.getSeconds().toString().padStart(2, "0");
+
+  return {
+    fullDate: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}`,
+    date: `${yr}-${mo}-${dt}`,
+    time: `${hr}:${mn}:${sc}`,
+  };
+}
+
 // Function to generate a timestamp for saving data
 function getSaveDate() {
   let saveDate = new Date();

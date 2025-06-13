@@ -101,35 +101,12 @@ var rangeInputArr = [rangeInput1];
 
 // Function to handle button press logic
 function countPress() {
-  currDate = new Date();
-  let yr = currDate.getFullYear();
-  let mo = currDate.getMonth() + 1;
-  let dt = currDate.getDate();
-  let hr = currDate.getHours();
-  let mn = currDate.getMinutes();
-  let sc = currDate.getSeconds();
-
-  // Add leading zeros to date/time values
-  if (mo < 10) {
-    mo = "0" + mo;
-  }
-  if (dt < 10) {
-    dt = "0" + dt;
-  }
-  if (hr < 10) {
-    hr = "0" + hr;
-  }
-  if (mn < 10) {
-    mn = "0" + mn;
-  }
-  if (sc < 10) {
-    sc = "0" + sc;
-  }
-
   id++;
   countArr[this.value]++;
   var v = countArr[this.value];
   var r = rangeInputArr[this.value].value; // Get range value
+
+  const { fullDate, date, time } = formatCurrentDateTime();
 
   var currArr = [
     id,
@@ -141,9 +118,9 @@ function countPress() {
     currPosition.coords.longitude,
     currPosition.coords.altitude,
     currPosition.coords.timestamp,
-    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
-    yr + "-" + mo + "-" + dt,
-    hr + ":" + mn + ":" + sc,
+    fullDate,
+    date,
+    time,
   ];
   dataArr.push(currArr);
 
@@ -158,9 +135,9 @@ function countPress() {
     currPosition.coords.longitude,
     currPosition.coords.altitude,
     currPosition.coords.timestamp,
-    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
-    yr + "-" + mo + "-" + dt,
-    hr + ":" + mn + ":" + sc,
+    fullDate,
+    date,
+    time,
     {
       button_id: Number(this.value),
       button_label: this.innerHTML,
