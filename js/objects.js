@@ -19,7 +19,6 @@ var geoJsonLayer = L.geoJSON(null, {
 
 //----------OBJECT DETECTION AND TRACKING----------//
 
-// Get video stream from the user's camera
 async function getVideo() {
   const videoElement = document.createElement("video");
   videoElement.width = 10;
@@ -27,15 +26,30 @@ async function getVideo() {
   let hiddenVideo = document.querySelector("#hiddenvid");
   hiddenVideo.appendChild(videoElement);
 
-  const capture = await navigator.mediaDevices.getUserMedia(constraints);
-  videoElement.srcObject = capture;
-  videoElement.play();
+  try {
+    const capture = await navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = capture;
 
-  videoElement.setAttribute("playsinline", true);
-  videoElement.setAttribute("autoplay", true);
-  videoElement.setAttribute("muted", true);
+    // Wait for video to be ready
+    await new Promise((resolve) => {
+      videoElement.onloadedmetadata = () => {
+        resolve();
+      };
+    });
 
-  return videoElement;
+    videoElement.play();
+    videoElement.setAttribute("playsinline", true);
+    videoElement.setAttribute("autoplay", true);
+    videoElement.setAttribute("muted", true);
+
+    return videoElement;
+  } catch (err) {
+    console.error("Error accessing camera:", err);
+    alert(
+      "Unable to access camera. Please ensure camera permissions are granted."
+    );
+    throw err;
+  }
 }
 
 // Create a canvas element
