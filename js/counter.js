@@ -1,27 +1,27 @@
-// Initialize a Leaflet map
+// Initialize a Leaflet map instance
 var map = L.map("map").setView([53.35014, -6.266155], 9);
 
-// Add a tile layer (using OpenStreetMap as an example)
+// Add a tile layer using OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: "© OpenStreetMap",
 }).addTo(map);
 
-// Initialize an empty GeoJSON layer
+// Initialize an empty GeoJSON layer for displaying data points on the map
 var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
-      radius: 8, // Circle radius
-      fillColor: getColorByButtonId(feature.properties.button_id), // Color based on button_id
-      color: "#fff", // Border color
-      weight: 2, // Border width
-      opacity: 1, // Border opacity
-      fillOpacity: 0.8, // Fill opacity
+      radius: 8,
+      fillColor: getColorByButtonId(feature.properties.button_id),
+      color: "#fff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8,
     });
   },
 }).addTo(map);
 
-// Helper function to determine circle color based on button_id
+// Function to determine the circle color based on button ID
 function getColorByButtonId(button_id) {
   const colors = {
     0: "#c97cf7",
@@ -37,12 +37,13 @@ function getColorByButtonId(button_id) {
   return colors[button_id] || "#ccc"; // Default color if button_id is not mapped
 }
 
-// Initialize the GeoJSON data object
+// GeoJSON data object initialization
 var myJson = {
   type: "FeatureCollection",
   features: [],
 };
 
+// Function to create a GeoJSON feature
 function createJson(
   id,
   button_id,
@@ -56,8 +57,7 @@ function createJson(
   date,
   time
 ) {
-  console.log("blah blah json");
-  //
+  console.log("Adding to GeoJSON");
   if (altitude === null) {
     myJson.features.push({
       type: "Feature",
@@ -80,7 +80,6 @@ function createJson(
       },
     });
   } else {
-    //
     myJson.features.push({
       type: "Feature",
       properties: {
@@ -103,16 +102,14 @@ function createJson(
       },
     });
   }
-  //
   console.log(myJson);
 }
 
-// variables for geo, time, buttons, data
+// Variables for geolocation, time, buttons, and data initialization
 var geoEnabled = document.getElementById("geo-enabled");
 var dataReadOut = document.getElementById("read-out");
 
 var currPosition;
-
 var currDate = new Date();
 
 var resetDataBtn = document.getElementById("resetData");
@@ -135,6 +132,7 @@ var dataHead = [
 ];
 var dataArr = [dataHead];
 
+// Button and count tracker variables initialization
 var countBtn1 = document.getElementById("count1");
 var countBtn2 = document.getElementById("count2");
 var countBtn3 = document.getElementById("count3");
@@ -164,10 +162,11 @@ countTracker8.innerHTML = 0;
 var countTracker9 = document.getElementById("countNumberTracker9");
 countTracker9.innerHTML = 0;
 
-// variables for editing
+// Editing related variables
 var currEdit = false;
 var editBtn = document.getElementById("edit");
 
+// Initialize custom label input fields and set visibility
 var buttonLabel1 = document.getElementById("buttonLabel1");
 buttonLabel1.value = countBtn1.innerHTML;
 buttonLabel1.style.visibility = "hidden";
@@ -204,10 +203,10 @@ var buttonLabel9 = document.getElementById("buttonLabel9");
 buttonLabel9.value = countBtn9.innerHTML;
 buttonLabel9.style.visibility = "hidden";
 
-// array to store counts
+// Array to store counts
 var countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-// storing button id values
+// Storing button id values
 countBtn1.value = 0;
 countBtn2.value = 1;
 countBtn3.value = 2;
@@ -241,6 +240,7 @@ var countTrackerArr = [
   countTracker9,
 ];
 
+// Function to handle the button press logic
 function countPress() {
   currDate = new Date();
   let yr = currDate.getFullYear();
@@ -249,7 +249,7 @@ function countPress() {
   let hr = currDate.getHours();
   let mn = currDate.getMinutes();
   let sc = currDate.getSeconds();
-  //
+
   if (mo < 10) {
     mo = "0" + mo;
   }
@@ -265,10 +265,8 @@ function countPress() {
   if (sc < 10) {
     sc = "0" + sc;
   }
-  //
+
   id++;
-  //this.value++;
-  //countTrack1.innerHTML = this.value;
   countArr[this.value]++;
   var v = countArr[this.value];
 
@@ -281,16 +279,16 @@ function countPress() {
     currPosition.coords.longitude,
     currPosition.coords.altitude,
     currPosition.coords.timestamp,
-    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc, //yr + "-" + mo + "-" + dt,
+    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
     yr + "-" + mo + "-" + dt,
     hr + ":" + mn + ":" + sc,
   ];
   dataArr.push(currArr);
-  //
+
   console.log(dataArr);
-  //
+
   countTrackerArr[this.value].innerHTML = v;
-  //
+
   dataReadOut.innerHTML = currArr;
 
   createJson(
@@ -302,15 +300,15 @@ function countPress() {
     currPosition.coords.longitude,
     currPosition.coords.altitude,
     currPosition.coords.timestamp,
-    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc, //yr + "-" + mo + "-" + dt,
+    yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
     yr + "-" + mo + "-" + dt,
     hr + ":" + mn + ":" + sc
   );
   mapJson();
 }
 
+// Function to reset data and geoJSON object
 function resetData() {
-  //
   id = 0;
   dataArr = [dataHead];
   countArr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -323,16 +321,15 @@ function resetData() {
   countTracker7.innerHTML = 0;
   countTracker8.innerHTML = 0;
   countTracker9.innerHTML = 0;
-  //
-  // reset json
+
   myJson = {
     type: "FeatureCollection",
     features: [],
   };
-  //
   console.log(dataArr);
 }
 
+// Function to handle the edit/save button logic for label editing
 function editPress() {
   currEdit = !currEdit;
   if (currEdit) {
@@ -393,9 +390,10 @@ function editPress() {
   }
 }
 
-// Geolocation
+// Geolocation initialization
 getGeolocation();
 
+// Add event listeners to buttons
 resetDataBtn.addEventListener("click", resetData);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
