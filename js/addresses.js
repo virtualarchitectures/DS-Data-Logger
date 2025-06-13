@@ -47,7 +47,7 @@ function getNearbyAddresses() {
           5
         )}, Longitude ${lon.toFixed(5)}`;
 
-        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18&namedetails=1`;
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1&zoom=18&namedetails=1&layer=address`;
 
         try {
           const response = await fetch(url, {
