@@ -61,6 +61,40 @@ function mapJson() {
 
 //----------DATA PREPARATION AND HANDLING----------//
 
+// Function to create a GeoJSON feature
+function createJson(
+  id,
+  latitude,
+  longitude,
+  altitude,
+  timestamp,
+  iso_date,
+  date,
+  time,
+  properties = {}
+) {
+  console.log("Adding to GeoJSON");
+  const baseFeature = {
+    type: "Feature",
+    properties: {
+      id,
+      timestamp,
+      "iso-date": iso_date,
+      date,
+      time,
+      ...properties,
+    },
+    geometry: { type: "Point", coordinates: [longitude, latitude] },
+  };
+
+  if (altitude !== null) {
+    baseFeature.geometry.coordinates.push(altitude);
+  }
+
+  myJson.features.push(baseFeature);
+  console.log(myJson);
+}
+
 // Function to generate a timestamp for saving data
 function getSaveDate() {
   let saveDate = new Date();

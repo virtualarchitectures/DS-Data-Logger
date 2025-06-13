@@ -34,63 +34,6 @@ var myJson = {
   features: [],
 };
 
-function createJson(
-  id,
-  button_id,
-  button_label,
-  count,
-  the_text,
-  latitude,
-  longitude,
-  altitude,
-  timestamp,
-  iso_date,
-  date,
-  time
-) {
-  console.log("blah blah json");
-  if (altitude === null) {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        button_id: button_id,
-        button_label: button_label,
-        count: count,
-        text: the_text, // Store the text property
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [longitude, latitude],
-      },
-    });
-  } else {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        button_id: button_id,
-        button_label: button_label,
-        count: count,
-        text: the_text,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [longitude, latitude, altitude],
-      },
-    });
-  }
-  console.log(myJson);
-}
-
 //----------VARIABLE INITIALIZATION----------//
 
 // Variables for geolocation, time, and data initialization
@@ -196,17 +139,19 @@ function countPress() {
 
   createJson(
     id,
-    Number(this.value),
-    this.innerHTML,
-    v,
-    t,
     currPosition.coords.latitude,
     currPosition.coords.longitude,
     currPosition.coords.altitude,
     currPosition.coords.timestamp,
     yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
     yr + "-" + mo + "-" + dt,
-    hr + ":" + mn + ":" + sc
+    hr + ":" + mn + ":" + sc,
+    {
+      button_id: Number(this.value),
+      button_label: this.innerHTML,
+      count: v,
+      text: t,
+    }
   );
   mapJson();
 }
