@@ -490,25 +490,6 @@ function realtimeAdd(objectArr) {
   }
 }
 
-//----------MAP EXPORT----------//
-
-// Map export function to export the map as an image
-function exportMap() {
-  map.getCanvas().toBlob(mapBlobHandler);
-}
-
-// Blob handler for exported map data
-function mapBlobHandler(content) {
-  var blobUrl = URL.createObjectURL(content);
-  //
-  let link = document.createElement("a"); // Or maybe get it from the current document
-  link.href = blobUrl;
-  link.download = "datawalking-map.png";
-  link.innerText = "Click here to download the file";
-  link.id = "download";
-  link.click();
-}
-
 // Reset function for object-specific data
 function resetObjectSpecificData() {
   elapsedRecordingTime = 0;
@@ -534,8 +515,6 @@ resetDataBtn.addEventListener("click", () => {
 });
 exportCSVBtn.addEventListener("click", exportCSV);
 exportGeoJsonBtn.addEventListener("click", exportJson);
-
-exportMapBtn.addEventListener("click", exportMap);
 
 addButton.addEventListener("click", countPress);
 snapButton.addEventListener("click", snapPress);
