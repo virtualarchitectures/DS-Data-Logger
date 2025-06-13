@@ -33,16 +33,6 @@ let canvas, ctx;
 const width = 480;
 const height = 360;
 
-// Set camera constraints for video capture
-const constraints = {
-  audio: false,
-  video: {
-    facingMode: {
-      ideal: "environment",
-    },
-  },
-};
-
 // HTML element for video placement
 let placer;
 
@@ -87,6 +77,16 @@ function createCanvas(w, h) {
   placer.appendChild(canvas);
   return canvas;
 }
+
+// Set camera constraints for video capture
+const constraints = {
+  audio: false,
+  video: {
+    facingMode: {
+      ideal: "environment",
+    },
+  },
+};
 
 // Initialize video and object detection model
 async function make() {
