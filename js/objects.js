@@ -19,6 +19,34 @@ var geoJsonLayer = L.geoJSON(null, {
 
 //----------OBJECT DETECTION AND TRACKING----------//
 
+// Get video stream from the user's camera
+async function getVideo() {
+  const videoElement = document.createElement("video");
+  videoElement.width = 10;
+  videoElement.height = 10;
+  let hiddenVideo = document.querySelector("#hiddenvid");
+  hiddenVideo.appendChild(videoElement);
+
+  const capture = await navigator.mediaDevices.getUserMedia(constraints);
+  videoElement.srcObject = capture;
+  videoElement.play();
+
+  videoElement.setAttribute("playsinline", true);
+  videoElement.setAttribute("autoplay", true);
+  videoElement.setAttribute("muted", true);
+
+  return videoElement;
+}
+
+// Create a canvas element
+function createCanvas(w, h) {
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  placer.appendChild(canvas);
+  return canvas;
+}
+
 // Set camera constraints for video capture
 const constraints = {
   audio: false,
@@ -130,32 +158,10 @@ function draw() {
 
 //----------UTILITY FUNCTIONS----------//
 
-// Get video stream from the user's camera
-async function getVideo() {
-  const videoElement = document.createElement("video");
-  videoElement.width = 10;
-  videoElement.height = 10;
-  let hiddenVideo = document.querySelector("#hiddenvid");
-  hiddenVideo.appendChild(videoElement);
-
-  const capture = await navigator.mediaDevices.getUserMedia(constraints);
-  videoElement.srcObject = capture;
-  videoElement.play();
-
-  videoElement.setAttribute("playsinline", true);
-  videoElement.setAttribute("autoplay", true);
-  videoElement.setAttribute("muted", true);
-
-  return videoElement;
-}
-
-// Create a canvas element
-function createCanvas(w, h) {
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  placer.appendChild(canvas);
-  return canvas;
+// Reset function for object-specific data
+function resetObjectSpecificData() {
+  elapsedRecordingTime = 0;
+  inputFieldArr[0].value = "Objects recorded...";
 }
 
 // Map event listener for loading and setting source
@@ -488,12 +494,6 @@ function realtimeAdd(objectArr) {
     );
     id++;
   }
-}
-
-// Reset function for object-specific data
-function resetObjectSpecificData() {
-  elapsedRecordingTime = 0;
-  inputFieldArr[0].value = "Objects recorded...";
 }
 
 //----------GEOLOCATION AND EVENT LISTENERS----------//
