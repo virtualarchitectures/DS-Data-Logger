@@ -119,16 +119,8 @@ async function getVideo() {
   try {
     const capture = await navigator.mediaDevices.getUserMedia(constraints);
     videoElement.srcObject = capture;
-
-    // Wait for video to be ready
-    await new Promise((resolve) => {
-      videoElement.onloadedmetadata = () => {
-        resolve();
-      };
-    });
-
-    // Start playing after metadata is loaded
     videoElement.play();
+
     videoElement.setAttribute("playsinline", true);
     videoElement.setAttribute("autoplay", true);
     videoElement.setAttribute("muted", true);
