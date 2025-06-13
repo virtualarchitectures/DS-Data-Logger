@@ -197,12 +197,6 @@ var myJson = {
   features: [],
 };
 
-// Initialize a smaller GeoJSON data structure
-var dotJson = {
-  type: "FeatureCollection",
-  features: [],
-};
-
 // Create a GeoJSON feature and add it to the data object
 function createJson(
   id,
