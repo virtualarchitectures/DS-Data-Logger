@@ -1,0 +1,562 @@
+//----------MAP INITIALIZATION----------//
+
+// Initialize a Leaflet map instance
+var map = leafletMap();
+
+// Initialize an empty GeoJSON layer for displaying data points on the map
+var geoJsonLayer = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: getColorByButtonId(feature.properties.button_id),
+      color: "#fff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8,
+    });
+  },
+}).addTo(map);
+
+//----------OBJECT DETECTION AND TRACKING----------//
+
+const constraints = {
+  audio: false,
+  video: {
+    facingMode: {
+      ideal: "environment",
+    },
+  },
+};
+
+let snapData = false;
+let recordData = false;
+let objectId = 0;
+
+let objectDetector;
+let status;
+let objects = [];
+let video;
+let canvas, ctx;
+const width = 480;
+const height = 360;
+
+let placer;
+
+async function make() {
+  placer = document.getElementById("vid");
+  // get the video
+  video = await getVideo();
+
+  console.log("before model");
+
+  objectDetector = await ml5.objectDetector("cocossd", startDetecting);
+
+  canvas = createCanvas(width, height);
+  ctx = canvas.getContext("2d");
+}
+
+// when the dom is loaded, call make();
+window.addEventListener("DOMContentLoaded", function () {
+  make();
+});
+
+function loopObjects(item, index, arr) {
+  if (index < arr.length - 1) {
+    inputFieldArr[0].value += item.label + ", ";
+  } else {
+    inputFieldArr[0].value += item.label;
+  }
+}
+
+function startDetecting() {
+  console.log("model ready");
+  console.log(objectDetector);
+  detect();
+}
+
+function detect() {
+  objectDetector.detect(video, function (err, results) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    objects = results;
+    //console.log(objects[0].label, objects[0].confidence.toFixed(3));
+    //console.log(objects.length);
+
+    if (objects) {
+      draw();
+      if (recordData || snapData) {
+        //console.log(objects);
+        //inputFieldArr[0].value += "\n" + objects[0].label;
+
+        // add objects to textfield
+        if (objects.length > 0) {
+          inputFieldArr[0].value += "\n";
+          objects.forEach(loopObjects);
+          inputFieldArr[0].scrollTop = inputFieldArr[0].scrollHeight;
+          //add data function
+          //console.log(objects);
+
+          // this works
+          //realtimeAdd(JSON.stringify(objects));
+          realtimeAdd(objects);
+        }
+        snapData = false;
+      }
+    }
+
+    detect();
+  });
+}
+
+function draw() {
+  // Clear part of the canvas
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.drawImage(video, 0, 0);
+  for (let i = 0; i < objects.length; i += 1) {
+    ctx.font = "16px Arial";
+    if (recordData) {
+      ctx.fillStyle = "#C97CF7";
+    } else {
+      ctx.fillStyle = "#27baa4";
+    }
+    ctx.fillText(objects[i].label, objects[i].x + 4, objects[i].y + 16);
+
+    ctx.beginPath();
+    ctx.rect(objects[i].x, objects[i].y, objects[i].width, objects[i].height);
+    if (recordData) {
+      ctx.strokeStyle = "#C97CF7";
+    } else {
+      ctx.strokeStyle = "#27baa4";
+    }
+    ctx.stroke();
+    ctx.closePath();
+  }
+}
+
+//----------UTILITY FUNCTIONS----------//
+
+async function getVideo() {
+  // Grab elements, create settings, etc.
+  const videoElement = document.createElement("video");
+  //videoElement.setAttribute("style", "display: none;");
+  videoElement.width = 10; //width;
+  videoElement.height = 10; //height;
+  let hiddenVideo = document.querySelector("#hiddenvid");
+  hiddenVideo.appendChild(videoElement);
+  //document.body.appendChild(videoElement);
+
+  // Create a webcam capture
+  const capture = await navigator.mediaDevices.getUserMedia(constraints);
+  videoElement.srcObject = capture;
+  videoElement.play();
+
+  videoElement.setAttribute("playsinline", true);
+  videoElement.setAttribute("autoplay", true);
+  videoElement.setAttribute("muted", true);
+
+  return videoElement;
+}
+
+function createCanvas(w, h) {
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  placer.appendChild(canvas);
+  return canvas;
+}
+
+map.on("load", function () {
+  map.addSource("points", {
+    type: "geojson",
+    data: myJson,
+  });
+
+  // Add a symbol layer
+  map.addLayer({
+    id: "points",
+    type: "symbol",
+    source: "points",
+    layout: {
+      "text-field": ["get", "label"],
+      "text-size": 10,
+      "text-allow-overlap": true,
+    },
+    paint: {
+      "text-halo-color": "#C97CF7",
+      "text-halo-width": 0.5,
+      "text-halo-blur": 0.5,
+    },
+  });
+});
+
+var myJson = {
+  type: "FeatureCollection",
+  features: [],
+};
+
+var dotJson = {
+  type: "FeatureCollection",
+  features: [],
+};
+
+function createJson(
+  id,
+  button_id,
+  button_label,
+  count,
+  the_text,
+  latitude,
+  longitude,
+  altitude,
+  timestamp,
+  iso_date,
+  date,
+  time
+) {
+  //console.log("blah blah json");
+  if (altitude === null) {
+    myJson.features.push({
+      type: "Feature",
+      properties: {
+        id: id,
+        button_id: button_id,
+        button_label: button_label,
+        count: count,
+        objects: the_text,
+        timestamp: timestamp,
+        "iso-date": iso_date,
+        date: date,
+        time: time,
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [
+          currPosition.coords.longitude,
+          currPosition.coords.latitude,
+        ],
+      },
+    });
+  } else {
+    //
+    myJson.features.push({
+      type: "Feature",
+      properties: {
+        id: id,
+        button_id: button_id,
+        button_label: button_label,
+        count: count,
+        objects: the_text,
+        timestamp: timestamp,
+        "iso-date": iso_date,
+        date: date,
+        time: time,
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [
+          currPosition.coords.longitude,
+          currPosition.coords.latitude,
+          currPosition.coords.altitude,
+        ],
+      },
+    });
+  }
+  //
+  console.log(myJson);
+}
+
+function createSmallJson(
+  id,
+  the_label,
+  the_confidence,
+  latitude,
+  longitude,
+  altitude,
+  timestamp,
+  iso_date,
+  date,
+  time
+) {
+  //console.log("blah blah json");
+  if (altitude === null) {
+    myJson.features.push({
+      geometry: {
+        type: "Point",
+        coordinates: [
+          currPosition.coords.longitude,
+          currPosition.coords.latitude,
+        ],
+      },
+      type: "Feature",
+      properties: {
+        id: id,
+        label: the_label,
+        confidence: the_confidence,
+        timestamp: timestamp,
+        "iso-date": iso_date,
+        date: date,
+        time: time,
+      },
+    });
+  } else {
+    myJson.features.push({
+      geometry: {
+        type: "Point",
+        coordinates: [
+          currPosition.coords.longitude,
+          currPosition.coords.latitude,
+          currPosition.coords.altitude,
+        ],
+      },
+      type: "Feature",
+      properties: {
+        id: id,
+        label: the_label,
+        confidence: the_confidence,
+        timestamp: timestamp,
+        "iso-date": iso_date,
+        date: date,
+        time: time,
+      },
+    });
+  }
+  //console.log(myJson);
+}
+
+//----------VARIABLE INITIALIZATION----------//
+
+// Variables for geolocation, time, buttons, and data initialization
+var geoEnabled = document.getElementById("geo-enabled");
+var dataReadOut = document.getElementById("read-out");
+
+var currPosition;
+
+var currDate = new Date();
+
+var resetDataBtn = document.getElementById("resetData");
+var exportCSVBtn = document.getElementById("exportCSV");
+var exportGeoJsonBtn = document.getElementById("exportGeoJson");
+var exportMapBtn = document.getElementById("exportMap");
+
+var id = 0;
+var dataHead = [
+  "id",
+  "button_id",
+  "label",
+  "count",
+  "objects",
+  "latitude",
+  "longitude",
+  "altitude",
+  "timestamp",
+  "iso-date",
+  "date",
+  "time",
+];
+var dataArr = [dataHead];
+
+let recordTimer; // for displaying elapsed time
+let elapsedRecordingTime = 0;
+let mapTimer; //for re-bounding the map
+let snapTimer; // to trigger map update after pressing the button
+
+var addButton = document.getElementById("adder");
+var snapButton = document.getElementById("adder2");
+
+var countTracker1 = document.getElementById("countNumberTracker1");
+countTracker1.innerHTML = "0s";
+
+var inputField1 = document.getElementById("inputField1");
+
+// array to store counts
+var countArr = [0];
+
+// storing button id values
+addButton.value = 0;
+
+var buttonArr = [addButton];
+var countTrackerArr = [countTracker1];
+var inputFieldArr = [inputField1];
+
+function timerAverageData() {
+  console.log("timer hit");
+  console.log(myJson);
+  map.getSource("points").setData(myJson);
+
+  // increment timer display
+  elapsedRecordingTime++;
+  let mins = Math.floor(elapsedRecordingTime / 60);
+  let secs = elapsedRecordingTime % 60;
+  if (mins >= 1) {
+    countTracker1.innerHTML = mins + "m" + secs + "s";
+  } else {
+    countTracker1.innerHTML = secs + "s";
+  }
+}
+
+function timerMap() {
+  console.log("T I M E R M A P");
+  mapJson();
+}
+
+function timerSnap() {
+  console.log("T I M E R S N A P");
+  map.getSource("points").setData(myJson);
+  clearInterval(snapTimer);
+  snapTimer = null;
+}
+
+function snapPress() {
+  snapData = true;
+  if (myJson.features.length > 0) {
+    mapJson();
+  } else {
+    console.log("map me");
+    mapMe();
+
+    //console.log("Src= ", map.getSource('points'))
+  }
+  snapTimer = setInterval(timerSnap, 100);
+}
+
+function countPress() {
+  recordData = !recordData;
+
+  if (recordData) {
+    addButton.innerHTML = "Stop";
+    addButton.classList.toggle("recording");
+    recordTimer = setInterval(timerAverageData, 1000);
+    mapTimer = setInterval(timerMap, 60000);
+
+    if (myJson.features.length > 0) {
+      mapJson();
+    } else {
+      console.log("map me");
+      mapMe();
+    }
+  } else {
+    addButton.innerHTML = "Start";
+    addButton.classList.toggle("recording");
+    clearInterval(recordTimer);
+    recordTimer = null; //setInterval(timerAverageData,1000);
+    clearInterval(mapTimer);
+    mapTimer = null;
+  }
+}
+
+function realtimeAdd(objectArr) {
+  currDate = new Date();
+  let yr = currDate.getFullYear();
+  let mo = currDate.getMonth() + 1;
+  let dt = currDate.getDate();
+  let hr = currDate.getHours();
+  let mn = currDate.getMinutes();
+  let sc = currDate.getSeconds();
+  //
+  if (mo < 10) {
+    mo = "0" + mo;
+  }
+  if (dt < 10) {
+    dt = "0" + dt;
+  }
+  if (hr < 10) {
+    hr = "0" + hr;
+  }
+  if (mn < 10) {
+    mn = "0" + mn;
+  }
+  if (sc < 10) {
+    sc = "0" + sc;
+  }
+
+  var v = 0; //countArr[this.value];
+  // new method just make an array of the labels, don't try to make a json array for CSV
+  var objectList = [];
+  for (let i = 0; i < objectArr.length; i++) {
+    let currArr = [
+      id + i,
+      Number(this.value),
+      this.innerHTML,
+      v,
+      objectArr[i].label,
+      currPosition.coords.latitude,
+      currPosition.coords.longitude,
+      currPosition.coords.altitude,
+      currPosition.coords.timestamp,
+      yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
+      yr + "-" + mo + "-" + dt,
+      hr + ":" + mn + ":" + sc,
+    ];
+    dataArr.push(currArr);
+  }
+
+  // use  only parts of json object and rewrap as json
+  var reducedJSON = [];
+  for (let i = 0; i < objectArr.length; i++) {
+    createSmallJson(
+      id,
+      objectArr[i].label,
+      parseFloat(objectArr[i].confidence.toFixed(3)),
+      currPosition.coords.latitude,
+      currPosition.coords.longitude,
+      currPosition.coords.altitude,
+      currPosition.coords.timestamp,
+      yr + "-" + mo + "-" + dt + "T" + hr + ":" + mn + ":" + sc,
+      yr + "-" + mo + "-" + dt,
+      hr + ":" + mn + ":" + sc
+    );
+    id++;
+  }
+}
+
+// map export functions
+function exportMap() {
+  console.log("export a map time!");
+  map.getCanvas().toBlob(mapBlobHandler);
+}
+
+function mapBlobHandler(content) {
+  var blobUrl = URL.createObjectURL(content);
+  //
+  let link = document.createElement("a"); // Or maybe get it from the current document
+  link.href = blobUrl;
+  link.download = "datawalking-map.png";
+  link.innerText = "Click here to download the file";
+  link.id = "download";
+  link.click();
+}
+
+// Function to handle specific object.js resets
+function resetObjectSpecificData() {
+  elapsedRecordingTime = 0;
+  inputFieldArr[0].value = "Objects recorded...";
+}
+
+//----------GEOLOCATION AND EVENT LISTENERS----------//
+
+// Geolocation initialization
+getGeolocation();
+
+resetDataBtn.addEventListener("click", () => {
+  resetDataState(
+    dataArr,
+    dataHead,
+    countArr,
+    countTrackerArr,
+    myJson,
+    map,
+    geoJsonLayer
+  );
+  resetObjectSpecificData();
+});
+exportCSVBtn.addEventListener("click", exportCSV);
+exportGeoJsonBtn.addEventListener("click", exportJson);
+
+exportMapBtn.addEventListener("click", exportMap);
+
+addButton.addEventListener("click", countPress);
+snapButton.addEventListener("click", snapPress);
