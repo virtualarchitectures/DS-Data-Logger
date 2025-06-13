@@ -1,66 +1,4 @@
-//----------MAP INITIALIZATION----------//
-
-// Initialize a Leaflet map instance
-var map = leafletMap();
-
-// Initialize an empty GeoJSON layer for displaying data points on the map
-var geoJsonLayer = L.geoJSON(null, {
-  pointToLayer: function (feature, latlng) {
-    return L.circleMarker(latlng, {
-      radius: 8,
-      fillColor: "#C97CF7",
-      color: "#fff",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8,
-    });
-  },
-}).addTo(map);
-
 //----------OBJECT DETECTION AND TRACKING----------//
-
-async function getVideo() {
-  const videoElement = document.createElement("video");
-  videoElement.width = 10;
-  videoElement.height = 10;
-  let hiddenVideo = document.querySelector("#hiddenvid");
-  hiddenVideo.appendChild(videoElement);
-
-  try {
-    const capture = await navigator.mediaDevices.getUserMedia(constraints);
-    videoElement.srcObject = capture;
-
-    // Wait for video to be ready
-    await new Promise((resolve) => {
-      videoElement.onloadedmetadata = () => {
-        resolve();
-      };
-    });
-
-    // Start playing after metadata is loaded
-    videoElement.play();
-    videoElement.setAttribute("playsinline", true);
-    videoElement.setAttribute("autoplay", true);
-    videoElement.setAttribute("muted", true);
-
-    return videoElement;
-  } catch (err) {
-    console.error("Error accessing camera:", err);
-    alert(
-      "Unable to access camera. Please ensure camera permissions are granted."
-    );
-    throw err;
-  }
-}
-
-// Create a canvas element
-function createCanvas(w, h) {
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  placer.appendChild(canvas);
-  return canvas;
-}
 
 // Set camera constraints for video capture
 const constraints = {
@@ -170,6 +108,68 @@ function draw() {
     ctx.closePath();
   }
 }
+
+async function getVideo() {
+  const videoElement = document.createElement("video");
+  videoElement.width = 10;
+  videoElement.height = 10;
+  let hiddenVideo = document.querySelector("#hiddenvid");
+  hiddenVideo.appendChild(videoElement);
+
+  try {
+    const capture = await navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = capture;
+
+    // Wait for video to be ready
+    await new Promise((resolve) => {
+      videoElement.onloadedmetadata = () => {
+        resolve();
+      };
+    });
+
+    // Start playing after metadata is loaded
+    videoElement.play();
+    videoElement.setAttribute("playsinline", true);
+    videoElement.setAttribute("autoplay", true);
+    videoElement.setAttribute("muted", true);
+
+    return videoElement;
+  } catch (err) {
+    console.error("Error accessing camera:", err);
+    alert(
+      "Unable to access camera. Please ensure camera permissions are granted."
+    );
+    throw err;
+  }
+}
+
+// Create a canvas element
+function createCanvas(w, h) {
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  placer.appendChild(canvas);
+  return canvas;
+}
+
+//----------MAP INITIALIZATION----------//
+
+// Initialize a Leaflet map instance
+var map = leafletMap();
+
+// Initialize an empty GeoJSON layer for displaying data points on the map
+var geoJsonLayer = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: "#C97CF7",
+      color: "#fff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8,
+    });
+  },
+}).addTo(map);
 
 //----------UTILITY FUNCTIONS----------//
 
