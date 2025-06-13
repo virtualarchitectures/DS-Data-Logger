@@ -150,7 +150,7 @@ resetDataBtn.addEventListener("click", () =>
     geoJsonLayer
   )
 );
-exportCSVBtn.addEventListener("click", exportCSV2);
-exportGeoJsonBtn.addEventListener("click", exportJson2);
+exportCSVBtn.addEventListener("click", exportCSV);
+exportGeoJsonBtn.addEventListener("click", exportJson);
 
 addButton.addEventListener("click", countPress);

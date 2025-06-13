@@ -111,7 +111,7 @@ function formatCurrentDateTime() {
   const tzSign = tzOffset >= 0 ? "+" : "-";
 
   return {
-    dateTime: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}`,
+    fullDate: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}`,
     date: `${yr}-${mo}-${dt}`,
     time: `${hr}:${mn}:${sc}`,
     isoDateTime: `${yr}-${mo}-${dt}T${hr}:${mn}:${sc}${tzSign}${tzHr}:${tzMn}`,
@@ -156,22 +156,7 @@ function resetData(
 
 //----------DATA EXPORT----------//
 
-// CSV Export Functions
 function exportCSV() {
-  let csvContent = "data:text/csv;charset=utf-8,";
-
-  // Convert each data array to a CSV row and append to CSV content
-  dataArr.forEach(function (rowArr) {
-    let row = rowArr.join(",");
-    csvContent += row + "\r\n";
-  });
-
-  // Encode CSV content as a URI and open it in a new window
-  var encodedUri = encodeURI(csvContent);
-  window.open(encodedUri);
-}
-
-function exportCSV2() {
   // Create an initialized CSV content string
   let csvContent;
 
@@ -200,36 +185,7 @@ function exportCSV2() {
   reader.readAsDataURL(blobData);
 }
 
-// GeoJSON Export Functions
 function exportJson() {
-  console.log("export geojson...");
-  console.log(myJson);
-
-  // Convert GeoJSON object to a Blob
-  const blobData = new Blob([JSON.stringify(myJson, undefined, 2)], {
-    type: "text/json;charset=utf-8",
-  });
-
-  // Create a URL for the Blob
-  const blobUrl = URL.createObjectURL(blobData);
-
-  // Create a link element to trigger a download
-  const anchor = document.createElement("a");
-  anchor.href = blobUrl;
-  anchor.target = "_self";
-  anchor.download = "datawalking.geojson";
-
-  // Trigger the file download
-  anchor.click();
-
-  // Clean up the Blob URL
-  URL.revokeObjectURL(blobUrl);
-}
-
-function exportJson2() {
-  console.log("export geojson new way 2...");
-  console.log(myJson);
-
   // Get a formatted current date string
   let dateStr = formatCurrentDateTime().saveDate; // Use saveDate format
 
