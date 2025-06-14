@@ -1,4 +1,4 @@
-//----------SOUND DETECTION----------//
+//----------SOUND DETECTION AND VISUALISATION----------//
 
 const constraints = {
   audio: true,
@@ -375,41 +375,6 @@ function getSaveDate() {
   }
   //
   return yr + "-" + mo + "-" + dt + "-" + hr + "-" + mn + "-" + sc;
-}
-
-//trigger location
-function getLocation() {
-  console.log("trying to get geolocation enabled");
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, failPosition);
-    navigator.geolocation.watchPosition(trackPosition);
-    console.log("geo location enabled");
-  } else {
-    console.log("geo location failed");
-    geoEnabled.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function failPosition(error) {
-  if (error.code == error.PERMISSION_DENIED) {
-    console.log("geolocation access denied");
-  } else {
-    console.log("other error");
-  }
-}
-
-function showPosition(position) {
-  geoEnabled.innerHTML = "geolocation enabled";
-  geoEnabled.style.visibility = "hidden";
-  currPosition = position;
-  if (tapped) {
-    var s = document.getElementById("shield");
-    s.style.visibility = "hidden";
-  }
-}
-
-function trackPosition(position) {
-  currPosition = position;
 }
 
 function countPress() {
