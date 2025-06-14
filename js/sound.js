@@ -229,6 +229,9 @@ map.on("load", function () {
   }
 });
 
+//----------GEOJSON DATA MANAGEMENT----------//
+
+// Initialize GeoJSON object to store detected object data
 var myJson = {
   type: "FeatureCollection",
   features: [],
