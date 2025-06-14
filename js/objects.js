@@ -255,14 +255,20 @@ function countPress() {
 // Add detected object data in real-time
 function realtimeAdd(objectArr) {
   const { fullDate, date, time } = formatCurrentDateTime();
-  var v = 0;
+  var v = 0; // Initialize count if needed for context
+  const buttonID = snapData
+    ? document.getElementById("adder1").value
+    : document.getElementById("adder2").value;
+  const buttonLabel = snapData
+    ? document.getElementById("adder1").innerHTML
+    : document.getElementById("adder2").getAttribute("data-label");
 
   // Make an array of the labels
   for (let i = 0; i < objectArr.length; i++) {
     let currArr = [
       id + i,
-      Number(this.value),
-      this.innerHTML,
+      buttonID, // Use the button ID
+      buttonLabel, // Use the static label
       v,
       objectArr[i].label,
       currPosition.coords.latitude,
@@ -288,6 +294,8 @@ function realtimeAdd(objectArr) {
       date,
       time,
       {
+        button_id: buttonID, // Use the correct button ID
+        button_label: buttonLabel, // Use the static "Record" label
         label: objectArr[i].label,
         confidence: parseFloat(objectArr[i].confidence.toFixed(3)),
       }
@@ -333,8 +341,8 @@ let elapsedRecordingTime = 0;
 let mapTimer; // for re-bounding the map
 let snapTimer; // to trigger map update after pressing the button
 
-var addButton = document.getElementById("adder");
-var snapButton = document.getElementById("adder2");
+var snapButton = document.getElementById("adder1");
+var addButton = document.getElementById("adder2");
 
 var countTracker1 = document.getElementById("countNumberTracker1");
 countTracker1.innerHTML = "0s";
