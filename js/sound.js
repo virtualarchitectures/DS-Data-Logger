@@ -234,69 +234,6 @@ var myJson = {
   features: [],
 };
 
-function createJson(
-  id,
-  button_id,
-  button_label,
-  count,
-  the_text,
-  latitude,
-  longitude,
-  altitude,
-  timestamp,
-  iso_date,
-  date,
-  time
-) {
-  if (altitude === null) {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        button_id: button_id,
-        button_label: button_label,
-        count: count,
-        audio: the_text,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-        ],
-      },
-    });
-  } else {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        button_id: button_id,
-        button_label: button_label,
-        count: count,
-        audio: the_text,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-          currPosition.coords.altitude,
-        ],
-      },
-    });
-  }
-  console.log(myJson);
-}
-
 function createSmallJson(
   id,
   the_text,
