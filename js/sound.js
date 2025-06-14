@@ -53,7 +53,6 @@ async function make() {
   // Main block for doing the audio recording
   if (navigator.mediaDevices.getUserMedia) {
     console.log("getUserMedia supported.");
-    const constraints = { audio: true };
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(function (stream) {
