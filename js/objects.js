@@ -356,9 +356,6 @@ var inputField1 = document.getElementById("inputField1");
 // Array to store counts
 var countArr = [0];
 
-// Storing button id values
-addButton.value = 0;
-
 var buttonArr = [addButton];
 var countTrackerArr = [countTracker1];
 var inputFieldArr = [inputField1];
