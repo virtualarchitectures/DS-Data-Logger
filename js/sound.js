@@ -900,25 +900,6 @@ function realtimeAddArray(audioArr) {
   //mapJson();
 }
 
-function resetData() {
-  //
-  id = 0;
-  dataArr = [dataHead];
-  countArr = [0];
-  countTracker1.innerHTML = "0s";
-  elapsedRecordingTime = 0;
-  //
-  //inputFieldArr[0].value = "Objects recorded...";
-  // reset json
-  myJson = {
-    type: "FeatureCollection",
-    features: [],
-  };
-  //
-  map.getSource("points").setData(myJson);
-  console.log(dataArr);
-}
-
 function exportCSV() {
   let csvContent = "data:text/csv;charset=utf-8,";
 
@@ -970,7 +951,17 @@ function exportCSV2() {
 // Geolocation initialization
 getGeolocation();
 
-resetDataBtn.addEventListener("click", resetData);
+resetDataBtn.addEventListener("click", () => {
+  resetData(
+    dataArr,
+    dataHead,
+    countArr,
+    countTrackerArr,
+    myJson,
+    map,
+    geoJsonLayer
+  );
+});
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
 
