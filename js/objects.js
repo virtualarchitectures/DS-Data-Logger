@@ -252,10 +252,13 @@ function countPress() {
   }
 }
 
+// Initialize sequence variable for image capture
+let v = 0;
+
 // Add detected object data in real-time
 function realtimeAdd(objectArr) {
   const { fullDate, date, time } = formatCurrentDateTime();
-  var v = 0; // Initialize count if needed for context
+  var imageNumber = ++v; // Increment the image number
   const buttonID = snapData
     ? document.getElementById("adder1").value
     : document.getElementById("adder2").value;
@@ -269,7 +272,7 @@ function realtimeAdd(objectArr) {
       id + i,
       buttonID, // Use the button ID
       buttonLabel, // Use the static label
-      v,
+      imageNumber, // Use the incremented image number
       objectArr[i].label,
       currPosition.coords.latitude,
       currPosition.coords.longitude,
@@ -298,6 +301,7 @@ function realtimeAdd(objectArr) {
         button_label: buttonLabel, // Use the static "Record" label
         label: objectArr[i].label,
         confidence: parseFloat(objectArr[i].confidence.toFixed(3)),
+        image: imageNumber, // Add the image number to the JSON data
       }
     );
     id++;
@@ -324,7 +328,7 @@ var dataHead = [
   "id",
   "button_id",
   "label",
-  "count",
+  "image_sequence",
   "objects",
   "latitude",
   "longitude",
