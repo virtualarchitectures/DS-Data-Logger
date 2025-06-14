@@ -349,55 +349,6 @@ function createSmallJson(
   console.log(myJson);
 }
 
-function exportJson() {
-  console.log("export geojson...");
-  console.log(myJson);
-
-  // Convert object to Blob
-  const blobData = new Blob([JSON.stringify(myJson, undefined, 2)], {
-    type: "text/json;charset=utf-8",
-  });
-
-  // Convert Blob to URL
-  const blobUrl = URL.createObjectURL(blobData);
-
-  // Create an a element with blobl URL
-  const anchor = document.createElement("a");
-  anchor.href = blobUrl;
-  anchor.target = "_self";
-  anchor.download = "datawalking.geojson";
-
-  // Auto click on a element, trigger the file download
-  anchor.click();
-
-  // Don't forget ;)
-  URL.revokeObjectURL(blobUrl);
-}
-
-function exportJson2() {
-  console.log("export geojson new way 2...");
-  console.log(myJson);
-
-  console.log("save the date...");
-  let dateStr = getSaveDate(); //yr+"-"+mo+"-"+dt+"-"+hr+"-"+mn+"-"+sc;
-
-  // Convert object to Blob
-  const blobData = new Blob([JSON.stringify(myJson, undefined, 2)], {
-    type: "text/json;charset=utf-8",
-  });
-
-  var reader = new FileReader();
-  reader.onload = function () {
-    var popup = window.open();
-    var link = document.createElement("a");
-    link.setAttribute("href", reader.result);
-    link.setAttribute("download", "datawalking-" + dateStr + ".geojson");
-    popup.document.body.appendChild(link);
-    link.click();
-  };
-  reader.readAsDataURL(blobData);
-}
-
 function getSaveDate() {
   let saveDate = new Date();
   let yr = currDate.getFullYear();
@@ -553,42 +504,6 @@ function realtimeAddArray(audioArr) {
   );
 }
 
-function exportCSV() {
-  let csvContent = "data:text/csv;charset=utf-8,";
-
-  dataArr.forEach(function (rowArr) {
-    let row = rowArr.join(",");
-    csvContent += row + "\r\n";
-  });
-
-  var encodedUri = encodeURI(csvContent);
-  window.open(encodedUri);
-}
-
-function exportCSV2() {
-  let csvContent; // = "data:text/csv;charset=utf-8,";
-
-  dataArr.forEach(function (rowArr) {
-    let row = rowArr.join(",");
-    csvContent += row + "\r\n";
-  });
-
-  let dateStr = getSaveDate();
-  // Convert object to Blob
-  const blobData = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-
-  var reader = new FileReader();
-  reader.onload = function () {
-    var popup = window.open();
-    var link = document.createElement("a");
-    link.setAttribute("href", reader.result);
-    link.setAttribute("download", "datawalking-" + dateStr + ".csv");
-    popup.document.body.appendChild(link);
-    link.click();
-  };
-  reader.readAsDataURL(blobData);
-}
-
 //----------VARIABLE INITIALIZATION----------//
 
 // Variables for geolocation, time, buttons, and data initialization
@@ -655,7 +570,7 @@ resetDataBtn.addEventListener("click", () => {
     geoJsonLayer
   );
 });
-exportCSVBtn.addEventListener("click", exportCSV2);
-exportGeoJsonBtn.addEventListener("click", exportJson2);
+exportCSVBtn.addEventListener("click", exportCSV);
+exportGeoJsonBtn.addEventListener("click", exportJson);
 
 addButton.addEventListener("click", countPress);
