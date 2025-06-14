@@ -304,62 +304,7 @@ function createSmallJson(
   }
 }
 
-//----------VARIABLE INITIALIZATION----------//
-
-// Variables for geolocation, time, buttons, and data initialization
-var geoEnabled = document.getElementById("geo-enabled");
-var dataReadOut = document.getElementById("read-out");
-
-var currPosition;
-
-var currDate = new Date();
-
-var resetDataBtn = document.getElementById("resetData");
-var exportCSVBtn = document.getElementById("exportCSV");
-var exportGeoJsonBtn = document.getElementById("exportGeoJson");
-var exportMapBtn = document.getElementById("exportMap");
-
-var id = 0;
-var dataHead = [
-  "id",
-  "button_id",
-  "label",
-  "count",
-  "objects",
-  "latitude",
-  "longitude",
-  "altitude",
-  "timestamp",
-  "iso-date",
-  "date",
-  "time",
-];
-var dataArr = [dataHead];
-
-let recordTimer; // for displaying elapsed time
-let elapsedRecordingTime = 0;
-let mapTimer; // for re-bounding the map
-let snapTimer; // to trigger map update after pressing the button
-
-var addButton = document.getElementById("adder");
-var snapButton = document.getElementById("adder2");
-
-var countTracker1 = document.getElementById("countNumberTracker1");
-countTracker1.innerHTML = "0s";
-
-var inputField1 = document.getElementById("inputField1");
-
-// Array to store counts
-var countArr = [0];
-
-// Storing button id values
-addButton.value = 0;
-
-var buttonArr = [addButton];
-var countTrackerArr = [countTracker1];
-var inputFieldArr = [inputField1];
-
-//----------TIMER AND MAP UPDATE FUNCTIONS----------//
+//----------DATA CAPTURE AND RECORDING----------//
 
 // Handle timer events for map and data updating
 function timerAverageData() {
@@ -473,6 +418,61 @@ function realtimeAdd(objectArr) {
     id++;
   }
 }
+
+//----------VARIABLE INITIALIZATION----------//
+
+// Variables for geolocation, time, buttons, and data initialization
+var geoEnabled = document.getElementById("geo-enabled");
+var dataReadOut = document.getElementById("read-out");
+
+var currPosition;
+
+var currDate = new Date();
+
+var resetDataBtn = document.getElementById("resetData");
+var exportCSVBtn = document.getElementById("exportCSV");
+var exportGeoJsonBtn = document.getElementById("exportGeoJson");
+var exportMapBtn = document.getElementById("exportMap");
+
+var id = 0;
+var dataHead = [
+  "id",
+  "button_id",
+  "label",
+  "count",
+  "objects",
+  "latitude",
+  "longitude",
+  "altitude",
+  "timestamp",
+  "iso-date",
+  "date",
+  "time",
+];
+var dataArr = [dataHead];
+
+let recordTimer; // for displaying elapsed time
+let elapsedRecordingTime = 0;
+let mapTimer; // for re-bounding the map
+let snapTimer; // to trigger map update after pressing the button
+
+var addButton = document.getElementById("adder");
+var snapButton = document.getElementById("adder2");
+
+var countTracker1 = document.getElementById("countNumberTracker1");
+countTracker1.innerHTML = "0s";
+
+var inputField1 = document.getElementById("inputField1");
+
+// Array to store counts
+var countArr = [0];
+
+// Storing button id values
+addButton.value = 0;
+
+var buttonArr = [addButton];
+var countTrackerArr = [countTracker1];
+var inputFieldArr = [inputField1];
 
 //----------GEOLOCATION AND EVENT LISTENERS----------//
 
