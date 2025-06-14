@@ -437,19 +437,6 @@ function createSmallJson(
   console.log(myJson);
 }
 
-function mapJson() {
-  console.log("mappp");
-
-  var bounds = new mapboxgl.LngLatBounds();
-
-  myJson.features.forEach(function (feature) {
-    bounds.extend(feature.geometry.coordinates);
-    //console.log(feature);
-  });
-
-  map.fitBounds(bounds);
-}
-
 function exportJson() {
   console.log("export geojson...");
   console.log(myJson);
