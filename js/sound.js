@@ -1,28 +1,11 @@
-// Copyright (c) 2019 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
-/* ===
-ml5 Example
-Real time Object Detection using objectDetector
-=== */
-
-/*const constraints = {
-	audio: false,
-  video: true
-};*/
+//----------SOUND DETECTION----------//
 
 const constraints = {
   audio: true,
   video: false,
-  /*video: {
-    facingMode: {
-      exact: 'environment'
-    }
-  }*/
 };
 
+// Variables to control data capture and storage
 let recordData = false;
 let objectId = 0;
 
@@ -253,17 +236,24 @@ function timerMap() {
   mapJson();
 }
 
-// initialise mapbox
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiZGhkcGljIiwiYSI6IkZfUEVoTUUifQ.rNj-tr8788GTdoGnyMEtAQ";
-var map = new mapboxgl.Map({
-  container: "map", // container ID
-  style: "mapbox://styles/dhdpic/ckny7kaku1c8617pnlfatzqpz", // style URL
+//----------MAP INITIALIZATION----------//
 
-  center: [-0.12, 51.51], // starting position [lng, lat]
-  zoom: 9, // starting zoom
-  preserveDrawingBuffer: true,
-});
+// Initialize a Leaflet map instance
+var map = leafletMap();
+
+// Initialize an empty GeoJSON layer for displaying data points on the map
+var geoJsonLayer = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: "#C97CF7",
+      color: "#fff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8,
+    });
+  },
+}).addTo(map);
 
 map.on("load", function () {
   map.addSource("points", {
@@ -446,21 +436,6 @@ function createSmallJson(
   //
   console.log(myJson);
 }
-
-/*
-function mapJson() {
-	map.getSource('points').setData(myJson);
-  	//
-  	var bounds = new mapboxgl.LngLatBounds();
-
-  	myJson.features.forEach(function(feature) {
-    	bounds.extend(feature.geometry.coordinates);
-    	console.log(feature);
-	});
-
-	map.fitBounds(bounds);
-}
-*/
 
 function mapJson() {
   console.log("mappp");
@@ -1010,94 +985,13 @@ function exportCSV2() {
   reader.readAsDataURL(blobData);
 }
 
-// map export functions
-function exportMap() {
-  console.log("export a map time!");
-  map.getCanvas().toBlob(mapBlobHandler);
-}
+//----------GEOLOCATION AND EVENT LISTENERS----------//
 
-function mapBlobHandler(content) {
-  var blobUrl = URL.createObjectURL(content);
-  //
-  let link = document.createElement("a"); // Or maybe get it from the current document
-  link.href = blobUrl;
-  link.download = "datawalking-map.png";
-  link.innerText = "Click here to download the file";
-  link.id = "download";
-  link.click();
-}
-
-function editPress() {
-  currEdit = !currEdit;
-  if (currEdit) {
-    editBtn.innerHTML = "Save";
-
-    buttonLabel1.style.visibility = "visible";
-    buttonLabel2.style.visibility = "visible";
-    buttonLabel3.style.visibility = "visible";
-    buttonLabel4.style.visibility = "visible";
-    buttonLabel5.style.visibility = "visible";
-    buttonLabel6.style.visibility = "visible";
-    buttonLabel7.style.visibility = "visible";
-    buttonLabel8.style.visibility = "visible";
-    buttonLabel9.style.visibility = "visible";
-
-    countBtn1.classList.toggle("inactive-button");
-    countBtn2.classList.toggle("inactive-button");
-    countBtn3.classList.toggle("inactive-button");
-    countBtn4.classList.toggle("inactive-button");
-    countBtn5.classList.toggle("inactive-button");
-    countBtn6.classList.toggle("inactive-button");
-    countBtn7.classList.toggle("inactive-button");
-    countBtn8.classList.toggle("inactive-button");
-    countBtn9.classList.toggle("inactive-button");
-  } else {
-    editBtn.innerHTML = "Edit";
-
-    buttonLabel1.style.visibility = "hidden";
-    countBtn1.innerHTML = buttonLabel1.value;
-    buttonLabel2.style.visibility = "hidden";
-    countBtn2.innerHTML = buttonLabel2.value;
-    buttonLabel3.style.visibility = "hidden";
-    countBtn3.innerHTML = buttonLabel3.value;
-
-    buttonLabel4.style.visibility = "hidden";
-    countBtn4.innerHTML = buttonLabel4.value;
-    buttonLabel5.style.visibility = "hidden";
-    countBtn5.innerHTML = buttonLabel5.value;
-    buttonLabel6.style.visibility = "hidden";
-    countBtn6.innerHTML = buttonLabel6.value;
-
-    buttonLabel7.style.visibility = "hidden";
-    countBtn7.innerHTML = buttonLabel7.value;
-    buttonLabel8.style.visibility = "hidden";
-    countBtn8.innerHTML = buttonLabel8.value;
-    buttonLabel9.style.visibility = "hidden";
-    countBtn9.innerHTML = buttonLabel9.value;
-
-    countBtn1.classList.toggle("inactive-button");
-    countBtn2.classList.toggle("inactive-button");
-    countBtn3.classList.toggle("inactive-button");
-    countBtn4.classList.toggle("inactive-button");
-    countBtn5.classList.toggle("inactive-button");
-    countBtn6.classList.toggle("inactive-button");
-    countBtn7.classList.toggle("inactive-button");
-    countBtn8.classList.toggle("inactive-button");
-    countBtn9.classList.toggle("inactive-button");
-  }
-}
-
-//
-//
-//
-
-getLocation();
+// Geolocation initialization
+getGeolocation();
 
 resetDataBtn.addEventListener("click", resetData);
 exportCSVBtn.addEventListener("click", exportCSV2);
 exportGeoJsonBtn.addEventListener("click", exportJson2);
-exportMapBtn.addEventListener("click", exportMap);
 
 addButton.addEventListener("click", countPress);
-
-//editBtn.addEventListener("click", editPress);
