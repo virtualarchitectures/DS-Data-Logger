@@ -284,9 +284,13 @@ button:active {
   display: inline-block;
   margin: 10px;
   padding: 15px 30px;
+  width: 60px;
+  height: 20px;
   background-color: #357abd;
   color: #fff;
   text-decoration: none;
+  justify-content: center;
+  align-items: center;
   border-radius: 30px;
   font-weight: bold;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
