@@ -210,7 +210,8 @@ let mapTimer; //for re-bounding the map
 
 function timerAverageData() {
   console.log("timer hit");
-  map.getSource("points").setData(myJson);
+  geoJsonLayer.clearLayers();
+  geoJsonLayer.addData(myJson);
   // average data
   tempAudioData = tempAudioData.map(function (val, indx) {
     return Math.round((val = val / tempAudioCount));
