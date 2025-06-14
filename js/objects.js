@@ -179,63 +179,6 @@ var myJson = {
   features: [],
 };
 
-// Create a GeoJSON feature and add it to the data object
-function createSmallJson(
-  id,
-  the_label,
-  the_confidence,
-  latitude,
-  longitude,
-  altitude,
-  timestamp,
-  iso_date,
-  date,
-  time
-) {
-  if (altitude === null) {
-    myJson.features.push({
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-        ],
-      },
-      type: "Feature",
-      properties: {
-        id: id,
-        label: the_label,
-        confidence: the_confidence,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-    });
-  } else {
-    myJson.features.push({
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-          currPosition.coords.altitude,
-        ],
-      },
-      type: "Feature",
-      properties: {
-        id: id,
-        label: the_label,
-        confidence: the_confidence,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        date: date,
-        time: time,
-      },
-    });
-  }
-}
-
 //----------DATA CAPTURE AND RECORDING----------//
 
 // Handle timer events for map and data updating
@@ -314,7 +257,7 @@ function realtimeAdd(objectArr) {
   const { fullDate, date, time } = formatCurrentDateTime();
   var v = 0;
 
-  // new method just make an array of the labels, don't try to make a json array for CSV
+  // Make an array of the labels
   for (let i = 0; i < objectArr.length; i++) {
     let currArr = [
       id + i,
@@ -333,19 +276,21 @@ function realtimeAdd(objectArr) {
     dataArr.push(currArr);
   }
 
-  // use  only parts of json object and rewrap as json
+  // Use parts of json object and rewrap as json
   for (let i = 0; i < objectArr.length; i++) {
-    createSmallJson(
+    createJson(
       id,
-      objectArr[i].label,
-      parseFloat(objectArr[i].confidence.toFixed(3)),
       currPosition.coords.latitude,
       currPosition.coords.longitude,
       currPosition.coords.altitude,
       currPosition.coords.timestamp,
       fullDate,
       date,
-      time
+      time,
+      {
+        label: objectArr[i].label,
+        confidence: parseFloat(objectArr[i].confidence.toFixed(3)),
+      }
     );
     id++;
   }
