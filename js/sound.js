@@ -450,13 +450,6 @@ function mapJson() {
   map.fitBounds(bounds);
 }
 
-function mapMe() {
-  map.flyTo({
-    center: [currPosition.coords.longitude, currPosition.coords.latitude],
-    zoom: 16,
-  });
-}
-
 function exportJson() {
   console.log("export geojson...");
   console.log(myJson);
@@ -649,8 +642,7 @@ function showPosition(position) {
   geoEnabled.innerHTML = "geolocation enabled";
   geoEnabled.style.visibility = "hidden";
   currPosition = position;
-  mapMe();
-  //
+  //mapMe();
   if (tapped) {
     var s = document.getElementById("shield");
     s.style.visibility = "hidden";
@@ -677,7 +669,7 @@ function countPress() {
       mapJson();
     } else {
       console.log("map me");
-      mapMe();
+      //mapMe();
     }
   } else {
     addButton.innerHTML = "Start";
