@@ -19,7 +19,7 @@ function leafletMap() {
 function getGeolocation() {
   if (navigator.geolocation) {
     // If geolocation is available, set up position tracking
-    navigator.geolocation.getCurrentPosition(showPosition, failPosition);
+    navigator.geolocation.getCurrentPosition(showMap, failPosition);
     navigator.geolocation.watchPosition(trackPosition);
     console.log("Geo location enabled");
   } else {
@@ -29,9 +29,8 @@ function getGeolocation() {
   }
 }
 
-// Function to handle successful geolocation
-function showPosition(position) {
-  // Show position when geolocation is enabled
+// Show map and hide shield when geolocation is enabled
+function showMap() {
   geoEnabled.innerHTML = "geolocation enabled";
   geoEnabled.style.visibility = "hidden";
   var s = document.getElementById("shield");
