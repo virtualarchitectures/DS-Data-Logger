@@ -205,7 +205,6 @@ h3 {
   margin-right: auto;
   max-width: 600px;
   display: block;
-  vertical-align: middle;
   height: 500px;
   font-family: "mono-regular", monospace;
   font-size: 3em;
@@ -363,15 +362,14 @@ button:active {
 
 /*----------RANGE APP STYLES----------*/
 
-.range-tracker {
-}
-
 input[type="range"] {
   -webkit-appearance: none !important;
+  appearance: none;
   background: #aaa;
   height: 60px;
   touch-action: none;
 }
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none !important;
   background: #2b6799;
