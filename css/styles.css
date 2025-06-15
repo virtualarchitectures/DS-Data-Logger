@@ -1,6 +1,4 @@
-/* ==========================================================================
-   Base styles: opinionated defaults
-   ========================================================================== */
+/*----------BASE STYLES: OPINIONATED DEFAULTS----------*/
 
 html {
   color: #222;
@@ -46,9 +44,7 @@ textarea {
   resize: vertical;
 }
 
-/* ==========================================================================
-     Shared custom styles
-     ========================================================================== */
+/*----------SHARED CUSTOM STYLES----------*/
 
 h1 {
   color: #eaeaea;
@@ -221,9 +217,7 @@ h3 {
   height: 160px;
 }
 
-/* ==========================================================================
-    Index Page Styles
-    ========================================================================== */
+/*----------INDEX PAGE STYLES----------*/
 
 header {
   text-align: center;
@@ -320,9 +314,7 @@ button:active {
   color: #e40b79;
 }
 
-/* ==========================================================================
-     Counter App Styles
-     ========================================================================== */
+/*----------COUNTER APP STYLES----------*/
 
 #count4:active {
   background-color: #80b1d3;
@@ -369,9 +361,7 @@ button:active {
   color: #ccebc5;
 }
 
-/* ==========================================================================
-     Range App Styles
-     ========================================================================== */
+/*----------RANGE APP STYLES----------*/
 
 .range-tracker {
 }
@@ -401,18 +391,30 @@ input[type="text"] {
   display: none;
 }
 
-/* ==========================================================================
-     Range and Words App Styles
-     ========================================================================== */
+/*----------RANGE AND WORDS APP STYLES----------*/
 
 .input-field {
   width: 100%;
   color: #000;
 }
 
-/* ==========================================================================
-     Objects App Styles
-     ========================================================================== */
+/*----------OBJECTS APP STYLES----------*/
+
+#vid {
+  text-align: center;
+}
+
+#hiddenvid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.phide {
+  visibility: hidden;
+  color: #050508;
+}
 
 .count-button.recording {
   font-family: "mono-regular", monospace;
@@ -425,14 +427,8 @@ input[type="text"] {
   overflow: hidden;
 }
 
-.phide {
-  visibility: hidden;
-  color: #050508;
-}
+/*----------SOUND APP STYLES----------*/
 
-#hiddenvid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  opacity: 0;
+#audio {
+  text-align: center;
 }
