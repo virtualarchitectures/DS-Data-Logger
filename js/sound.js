@@ -261,7 +261,7 @@ function getColorByFrequencyIndex(index) {
 
 // Function to calculate circle radius based on audio intensity
 function getRadiusByAudioValue(audioValue) {
-  return Math.pow(audioValue / 80, 4) + 8; // Base radius of 4, scaled by audio intensity
+  return Math.pow(audioValue / 80, 4) + 4; // Base radius of 8, scaled by audio intensity
 }
 
 //----------GEOJSON DATA MANAGEMENT----------//
