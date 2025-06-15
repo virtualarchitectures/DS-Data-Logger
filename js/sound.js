@@ -250,58 +250,6 @@ var myJson = {
   features: [],
 };
 
-function createSmallJson(
-  id,
-  the_text,
-  latitude,
-  longitude,
-  altitude,
-  timestamp,
-  iso_date,
-  date,
-  time
-) {
-  if (altitude === null) {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        audio: the_text,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-        ],
-      },
-    });
-  } else {
-    myJson.features.push({
-      type: "Feature",
-      properties: {
-        id: id,
-        audio: the_text,
-        timestamp: timestamp,
-        "iso-date": iso_date,
-        time: time,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [
-          currPosition.coords.longitude,
-          currPosition.coords.latitude,
-          currPosition.coords.altitude,
-        ],
-      },
-    });
-  }
-  console.log(myJson);
-}
-
 function countPress() {
   recordData = !recordData;
 
