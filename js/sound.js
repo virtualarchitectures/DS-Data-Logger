@@ -1,39 +1,45 @@
 //----------SOUND DETECTION AND VISUALISATION----------//
 
+// Set constraints for audio capture (audio only, no video)
 const constraints = {
   audio: true,
   video: false,
 };
 
 // Variables to control data capture and storage
-let recordData = false;
-let objectId = 0;
+let recordData = false; // flag to indicate whether data should be recorded
+let objectId = 0; // id for managing objects
 
+// Variables for object detector and visualization
 let objectDetector;
 let status;
 let objects = [];
 let video;
-let canvas, ctx;
-const width = 480;
-const height = 360;
+let canvas, ctx; // variables for canvas context
+const width = 480; // width for video or canvas
+const height = 360; // height for video or canvas
 
 let placer;
 
+// Initialize audio context
 let audioCtx;
 
+// Declare variables for managing media stream
 let source;
 let stream;
 
-// Set up the different audio nodes we will use for the app
+// Set up audio nodes for sound analysis
 let analyser;
 
 // Set up canvas context for visualizer
 canvas = document.querySelector(".visualizer");
 const canvasCtx = canvas.getContext("2d");
 
-let tapped = false; // check a tap has happened...
+// Flag to check if a user interaction has occurred
+let tapped = false;
 document.body.addEventListener("click", make);
 
+// Function to initialize audio context and start media stream on user interaction
 async function make() {
   console.log("func make");
   tapped = true;
@@ -50,7 +56,7 @@ async function make() {
   analyser.maxDecibels = -10;
   analyser.smoothingTimeConstant = 0.85;
 
-  // Main block for doing the audio recording
+  // Request access to user's microphone
   if (navigator.mediaDevices.getUserMedia) {
     console.log("getUserMedia supported.");
     navigator.mediaDevices
@@ -59,21 +65,22 @@ async function make() {
         source = audioCtx.createMediaStreamSource(stream);
         source.connect(analyser);
 
-        visualize();
+        visualize(); // Call visualize to render the audio data
       })
       .catch(function (err) {
-        console.log("The following getUserMedia error occured: " + err);
+        console.log("The following getUserMedia error occurred: " + err);
       });
   } else {
     console.log("getUserMedia not supported on your browser!");
   }
 }
 
+// Function to visualize audio frequency data on canvas
 function visualize() {
   console.log("v i s u a l i s e");
 
-  WIDTH = 256; //canvas.width;
-  HEIGHT = 256; //canvas.height;
+  WIDTH = 256; // Set dimension for visualizer
+  HEIGHT = 256;
 
   analyser.fftSize = 256;
   const bufferLengthAlt = analyser.frequencyBinCount;
@@ -82,7 +89,7 @@ function visualize() {
   const dataArrayAlt = new Uint8Array(bufferLengthAlt);
 
   const drawAlt = function () {
-    let inc = 1;
+    let inc = 1; // Increment for drawing
 
     let pixels = canvasCtx.getImageData(1, 0, WIDTH - inc, HEIGHT);
     canvasCtx.putImageData(pixels, 0, 0);
@@ -95,11 +102,11 @@ function visualize() {
       tempAudioData = tempAudioData.map(function (val, indx) {
         return val + dataArrayAlt[indx];
       });
-      tempAudioCount++; //increment tracker
+      tempAudioCount++;
     }
 
-    let barWidth = 0; // (WIDTH / bufferLengthAlt) * 2.5;
-    let barHeight = HEIGHT / bufferLengthAlt; // * 2.5;
+    let barWidth = 0;
+    let barHeight = HEIGHT / bufferLengthAlt;
     let x = WIDTH;
     let y = 0;
 
@@ -119,34 +126,28 @@ function visualize() {
         canvasCtx.fillStyle =
           "rgb(" + barWidth * 2 + "," + barWidth * 2 + "," + barWidth * 2 + ")";
       }
-      canvasCtx.fillRect(
-        WIDTH - inc,
-        y, //HEIGHT - barHeight / 2,
-        inc, //WIDTH,
-        barHeight //barHeight / 2
-      );
+      canvasCtx.fillRect(WIDTH - inc, y, inc, barHeight);
 
-      //x += barWidth -1;
-      y += barHeight; //-1;
+      y += barHeight;
     }
   };
 
   drawAlt();
 }
 
-// array to store data and then average before saving to file
+// Array and counter for averaging audio data before saving
 let tempAudioData = new Array(128);
 let tempAudioCount = 0;
 
-//add a timer for averaging data
-let recordTimer; // = setInterval(timerAverageData,1000);
-let mapTimer; //for re-bounding the map
+// Timers for data averaging and map updates
+let recordTimer;
+let mapTimer;
 
+// Function to handle timer ticks for averaging data
 function timerAverageData() {
   console.log("timer hit");
   geoJsonLayer.clearLayers();
   geoJsonLayer.addData(myJson);
-  // average data
   tempAudioData = tempAudioData.map(function (val, indx) {
     return Math.round((val = val / tempAudioCount));
   });
@@ -154,7 +155,6 @@ function timerAverageData() {
   realtimeAdd(tempAudioData);
   console.log("tac averaged", tempAudioData);
 
-  // increment timer display
   elapsedRecordingTime++;
   let mins = Math.floor(elapsedRecordingTime / 60);
   let secs = elapsedRecordingTime % 60;
@@ -165,6 +165,7 @@ function timerAverageData() {
   }
 }
 
+// Timer function to update map
 function timerMap() {
   console.log("T I M E R M A P");
   mapJson();
@@ -175,7 +176,7 @@ function timerMap() {
 // Initialize a Leaflet map instance
 var map = leafletMap();
 
-// Initialize an empty GeoJSON layer for displaying data points on the map
+// Create an empty GeoJSON layer for map display
 var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
     return L.circleMarker(latlng, {
@@ -231,7 +232,7 @@ map.on("load", function () {
 
 //----------UTILITY FUNCTIONS----------//
 
-// Override the default showMap function to require tap before starting microphone
+// Override the default showMap function to require user tap before starting microphone
 function showMap(position) {
   geoEnabled.innerHTML = "geolocation enabled";
   geoEnabled.style.visibility = "hidden";
@@ -244,7 +245,7 @@ function showMap(position) {
 
 //----------GEOJSON DATA MANAGEMENT----------//
 
-// Initialize GeoJSON object to store detected object data
+// Initialize GeoJSON object to store detected audio data
 var myJson = {
   type: "FeatureCollection",
   features: [],
@@ -267,18 +268,14 @@ function countPress() {
       mapJson();
     } else {
       console.log("map me");
-      //mapMe();
     }
   } else {
     addButton.innerHTML = "Start";
     addButton.classList.toggle("recording");
     clearInterval(recordTimer);
-    recordTimer = null; //setInterval(timerAverageData,1000);
+    recordTimer = null;
     clearInterval(mapTimer);
     mapTimer = null;
-    // clean up and record any leftover data
-    console.log("stop hit");
-    // average data
     tempAudioData = tempAudioData.map(function (val, indx) {
       return Math.round((val = val / tempAudioCount));
     });
@@ -287,7 +284,7 @@ function countPress() {
   }
 }
 
-// Add detected object data in real-time
+// Add detected audio data in real-time
 function realtimeAdd(audioArr) {
   const dateTime = formatCurrentDateTime();
 
@@ -378,6 +375,7 @@ var inputFieldArr = [inputField1];
 // Geolocation initialization
 getGeolocation();
 
+// Event listeners for data management buttons
 resetDataBtn.addEventListener("click", () => {
   resetData(
     dataArr,
