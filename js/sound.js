@@ -179,56 +179,26 @@ var map = leafletMap();
 // Create an empty GeoJSON layer for map display
 var geoJsonLayer = L.geoJSON(null, {
   pointToLayer: function (feature, latlng) {
-    return L.circleMarker(latlng, {
-      radius: 8,
-      fillColor: "#C97CF7",
-      color: "#fff",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8,
+    // Get the audio data array from feature properties
+    const audioData = feature.properties.audio;
+
+    // Create a group of circle markers for each frequency band
+    const markerGroup = L.featureGroup();
+
+    audioData.forEach((value, index) => {
+      L.circleMarker(latlng, {
+        radius: getRadiusByAudioValue(value),
+        fillColor: getColorByFrequencyIndex(index),
+        color: "#fff",
+        weight: 1,
+        opacity: 0.4,
+        fillOpacity: 0.4,
+      }).addTo(markerGroup);
     });
+
+    return markerGroup;
   },
 }).addTo(map);
-
-map.on("load", function () {
-  map.addSource("points", {
-    type: "geojson",
-    data: myJson,
-  });
-
-  for (let i = 0; i < 128; i++) {
-    map.addLayer({
-      id: "sound-app-" + i,
-      type: "circle",
-      source: "points",
-      paint: {
-        "circle-radius": [
-          "^",
-          ["/", ["number", ["at", i, ["get", "audio"]]], 80],
-          4,
-        ],
-        "circle-opacity": 0.4,
-        "circle-color": [
-          "interpolate",
-          ["linear"],
-          i,
-          0,
-          "#000",
-          8,
-          "#3300FF",
-          16,
-          "#FF0033",
-          32,
-          "#FFFF33",
-          64,
-          "#33FF33",
-          128,
-          "#33FFFF",
-        ],
-      },
-    });
-  }
-});
 
 //----------UTILITY FUNCTIONS----------//
 
@@ -241,6 +211,57 @@ function showMap(position) {
     var s = document.getElementById("shield");
     s.style.visibility = "hidden";
   }
+}
+
+// Function to interpolate between two colors
+function interpolateColor(color1, color2, factor) {
+  const r1 = parseInt(color1.substring(1, 3), 16);
+  const g1 = parseInt(color1.substring(3, 5), 16);
+  const b1 = parseInt(color1.substring(5, 7), 16);
+
+  const r2 = parseInt(color2.substring(1, 3), 16);
+  const g2 = parseInt(color2.substring(3, 5), 16);
+  const b2 = parseInt(color2.substring(5, 7), 16);
+
+  const r = Math.round(r1 + factor * (r2 - r1));
+  const g = Math.round(g1 + factor * (g2 - g1));
+  const b = Math.round(b1 + factor * (b2 - b1));
+
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+}
+
+// Function to determine circle color based on frequency index
+function getColorByFrequencyIndex(index) {
+  // Define color stops
+  const colorStops = [
+    { pos: 0, color: "#000000" }, // Black
+    { pos: 8, color: "#3300FF" }, // Blue
+    { pos: 16, color: "#FF0033" }, // Red
+    { pos: 32, color: "#FFFF33" }, // Yellow
+    { pos: 64, color: "#33FF33" }, // Green
+    { pos: 128, color: "#33FFFF" }, // Cyan
+  ];
+
+  // Find the appropriate color segment
+  for (let i = 0; i < colorStops.length - 1; i++) {
+    if (index >= colorStops[i].pos && index < colorStops[i + 1].pos) {
+      const factor =
+        (index - colorStops[i].pos) /
+        (colorStops[i + 1].pos - colorStops[i].pos);
+      return interpolateColor(
+        colorStops[i].color,
+        colorStops[i + 1].color,
+        factor
+      );
+    }
+  }
+
+  return colorStops[colorStops.length - 1].color;
+}
+
+// Function to calculate circle radius based on audio intensity
+function getRadiusByAudioValue(audioValue) {
+  return Math.pow(audioValue / 80, 4) + 8; // Base radius of 4, scaled by audio intensity
 }
 
 //----------GEOJSON DATA MANAGEMENT----------//
