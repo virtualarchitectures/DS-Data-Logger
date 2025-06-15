@@ -151,7 +151,7 @@ function timerAverageData() {
     return Math.round((val = val / tempAudioCount));
   });
   tempAudioCount = 0;
-  realtimeAddArray(tempAudioData); // works
+  realtimeAdd(tempAudioData);
   console.log("tac averaged", tempAudioData);
 
   // increment timer display
@@ -284,7 +284,8 @@ function countPress() {
   }
 }
 
-function realtimeAddArray(audioArr) {
+// Add detected object data in real-time
+function realtimeAdd(audioArr) {
   const dateTime = formatCurrentDateTime();
 
   id++;
