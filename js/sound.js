@@ -250,6 +250,9 @@ var myJson = {
   features: [],
 };
 
+//----------DATA CAPTURE AND RECORDING----------//
+
+// Handle count button press to start/stop recording
 function countPress() {
   recordData = !recordData;
 
