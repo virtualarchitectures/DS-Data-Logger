@@ -229,6 +229,19 @@ map.on("load", function () {
   }
 });
 
+//----------UTILITY FUNCTIONS----------//
+
+// Override the default showMap function to require tap before starting microphone
+function showMap(position) {
+  geoEnabled.innerHTML = "geolocation enabled";
+  geoEnabled.style.visibility = "hidden";
+  currPosition = position;
+  if (tapped) {
+    var s = document.getElementById("shield");
+    s.style.visibility = "hidden";
+  }
+}
+
 //----------GEOJSON DATA MANAGEMENT----------//
 
 // Initialize GeoJSON object to store detected object data
