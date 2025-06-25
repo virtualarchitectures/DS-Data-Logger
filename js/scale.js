@@ -34,7 +34,23 @@ function getColorByScaleValue(scale_value) {
     10: "#3288bd",
     11: "#5e4fa2",
   };
-  return colors[scale_value] || "#878787"; // Default to grey if out of range
+
+   // Get the minimum and maximum possible values from current input options
+  let allScaleValues = Array.from(likertInputs).map(input => Number(input.value));
+  let minValue = Math.min(...allScaleValues);
+  let maxValue = Math.max(...allScaleValues);
+
+  // Determine the central value
+  let centerValue = 6; // Fixed center for color divergence
+
+  // Calculate the difference from the center and clip it to known colors
+  let diffFromCenter = scale_value - centerValue;
+  let adjustedValue = Math.round(centerValue + diffFromCenter);
+
+  // Ensure adjusted value falls within the current input values range
+  adjustedValue = Math.max(minValue, Math.min(maxValue, adjustedValue));
+
+  return colors[adjustedValue] || "#878787"; // Default to grey if not mapped
 }
 
 //----------GEOJSON DATA MANAGEMENT----------//
