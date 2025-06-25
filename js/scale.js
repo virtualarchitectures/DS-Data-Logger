@@ -178,34 +178,12 @@ function editPress() {
 
 // Function to show Likert scale edit options
 function showLikertEditOptions() {
-  likertInputs.forEach((input, index) => {
-    // Create an input field for each Likert value
-    let inputField = document.createElement("input");
-    inputField.type = "number";
-    inputField.value = input.value;
-    inputField.min = 1;
-    inputField.max = 11;
-    inputField.classList.add("likert-edit-input");
-
-    // Replace the existing label with this input field
-    let label = input.closest("label");
-    label.innerHTML = ""; // Clear current label contents
-    label.appendChild(inputField);
-  });
+  // Code to make inputs for editing Likert scale options visible
 }
 
 // Function to finalize Likert scale edit changes
 function finalizeLikertEdit() {
-  // Save the changes from the input fields back to Likert inputs
-  let editInputs = document.querySelectorAll(".likert-edit-input");
-  editInputs.forEach((editInput, index) => {
-    let newValue = editInput.value;
-    likertInputs[index].value = newValue;
-    
-    // Restore the original label with the new value
-    let label = editInput.closest("label");
-    label.innerHTML = `<input type="radio" name="likert" value="${newValue}">${newValue}`;
-  });
+  // Code to save changes to the Likert scale options
 }
 
 resetDataBtn.addEventListener("click", () =>
