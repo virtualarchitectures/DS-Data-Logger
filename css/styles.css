@@ -396,6 +396,20 @@ input[type="text"] {
   color: #000;
 }
 
+/*----------SCALE APP STYLES----------*/
+
+.likert-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.likert-scale label {
+  font-size: 1.2em;
+  color: #f0f0f0;
+  cursor: pointer;
+}
+
 /*----------OBJECTS APP STYLES----------*/
 
 #vid {
